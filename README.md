@@ -38,16 +38,9 @@ Pet Care is a mobile app for managing pet profiles, tracking care activities, vi
 - Room
 - Firebase
 - Hilt
-
-### iOS
-- UIKit
-- Firebase
-- CoreData
-- UserNotifications
-- Charts
-- SwiftLint
-- SwiftGen
-- SPM
+- Coroutines
+- Jetpack Navigation
+- Detekt
 
 ## Notifications
 
