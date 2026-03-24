@@ -41,6 +41,7 @@ Pet Care is a mobile app for managing pet profiles, tracking care activities, vi
 - Coroutines
 - Jetpack Navigation
 - Detekt
+- Retrofit
 
 ## Notifications
 
