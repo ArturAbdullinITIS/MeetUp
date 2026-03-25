@@ -1,4 +1,4 @@
-package ru.tbank.petcare.ui.theme
+package ru.tbank.petcare.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
