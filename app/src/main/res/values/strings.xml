@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PetCare</string>
+    <string name="unknown_error_mypets">Unknown error</string>
 </resources>

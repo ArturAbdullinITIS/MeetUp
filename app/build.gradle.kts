@@ -50,8 +50,6 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
 
-
-
     // Hilt
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
