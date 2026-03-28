@@ -44,7 +44,8 @@ import ru.tbank.petcare.presentation.common.ScreenTitleRow
 
 
 @Composable
-fun MyPetsScreen() {
+fun MyPetsScreen(
+) {
     MyPetsContent()
 }
 
