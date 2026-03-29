@@ -19,10 +19,11 @@ data class Pet(
 )
 
 enum class IconStatus(name: String) {
+    NONE(""),
     HEART("heart"),
     SPARKLES("sparkles"),
-    STAR("star"),
-    NONE("");
+    STAR("star");
+
 
     companion object {
         fun getIconStatusFromValue(value: String): IconStatus {

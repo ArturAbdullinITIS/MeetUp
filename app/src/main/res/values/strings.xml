@@ -39,4 +39,17 @@
     <string name="gender">Gender</string>
     <string name="add_pet_screen_title">Add Pet</string>
     <string name="edit_pet_screen_title">Edit Pet</string>
+    <string name="name_pet_placeholder">Name</string>
+    <string name="breed_pet_placeholder">Breed</string>
+    <string name="breed">Breed</string>
+    <string name="weight_pet_placeholder">Weight</string>
+    <string name="weight_kg">Weight (KG)</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="note_pet_placeholder">Note</string>
+    <string name="features_notes">Features / Notes</string>
+    <string name="add_pet">Add Pet</string>
+    <string name="add_profile_photo">Add Profile Photo</string>
+    <string name="pet_profile_placeholder">Pet profile placeholder</string>
+    <string name="pet_profile_picture">Pet Profile Picture</string>
+    <string name="calendar_icon">Calendar Icon</string>
 </resources>

@@ -65,10 +65,11 @@ class PetsRepositoryImpl @Inject constructor(
 
     override suspend fun addPet(pet: Pet): Result<Pet> = withContext(Dispatchers.IO){
         try {
-            if (pet.name.isBlank()) {
-                return@withContext Result.failure(IllegalStateException("Name cannot be blank"))
-            }
-            val dto = pet.toDto()
+            val currentUser = firebaseAuth.currentUser ?: return@withContext Result.failure(IllegalStateException("Not Authenticated"))
+
+            val petToSave = pet.copy(id = "", ownerId = currentUser.uid)
+
+            val dto = petToSave.toDto()
 
             val docRef = collection.add(dto).await()
 

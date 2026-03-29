@@ -131,7 +131,8 @@ fun CustomButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     content: (@Composable () -> Unit)? = null,
-    text: String
+    text: String,
+    enabled: Boolean
 ) {
     Button(
         modifier = modifier.height(52.dp),
@@ -139,13 +140,14 @@ fun CustomButton(
         shape = RoundedCornerShape(48.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            contentColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
+            contentColor = MaterialTheme.colorScheme.primaryContainer
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 4.dp,
             pressedElevation = 8.dp,
             hoveredElevation = 6.dp
-        )
+        ),
+        enabled = enabled
     ) {
         Text(
             text = text,
@@ -163,7 +165,8 @@ fun CustomButtonPreview() {
         CustomButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = {},
-            text = "Custom Button"
+            text = "Custom Button",
+            enabled = true
         )
     }
 }
