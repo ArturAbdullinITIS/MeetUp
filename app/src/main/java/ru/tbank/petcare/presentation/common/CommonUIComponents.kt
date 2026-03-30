@@ -213,7 +213,7 @@ fun IconStatusUI(
                 imageVector = model.imageVector,
                 contentDescription = stringResource(R.string.icon_status),
                 tint = model.iconTint,
-                modifier = Modifier.size((iconSize/3).dp)
+                modifier = Modifier.size((iconSize/2).dp)
             )
         }
     }

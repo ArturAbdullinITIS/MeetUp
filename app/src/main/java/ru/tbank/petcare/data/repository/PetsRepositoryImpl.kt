@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -90,39 +91,29 @@ class PetsRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun editPet(pet: Pet): Result<Unit> = withContext(Dispatchers.IO){
+    override suspend fun editPet(pet: Pet): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (pet.id.isBlank()) {
                 return@withContext Result.failure(IllegalArgumentException("Pet ID cannot be blank"))
             }
 
-            val currentUserId = firebaseAuth.currentUser?.uid
+            val updates = mapOf(
+                "name" to pet.name,
+                "breed" to pet.breed,
+                "weight" to pet.weight,
+                "date_of_birth" to pet.dateOfBirth,
+                "gender" to pet.gender.name,
+                "icon_status" to pet.iconStatus.name,
+                "is_public" to pet.isPublic,
+                "note" to pet.note,
+                "photo_url" to pet.photoUrl,
+                "game_score" to pet.gameScore
+            )
 
-            if (pet.ownerId != currentUserId) {
-                return@withContext Result.failure(SecurityException("Not authorized to edit this pet"))
-            }
-
-            val dto = pet.toDto()
-
-            collection.document(pet.id).set(dto).await()
+            collection.document(pet.id).set(updates, SetOptions.merge()).await()
             Result.success(Unit)
-        } catch (e: FirebaseFirestoreException) {
-            when (e.code) {
-                FirebaseFirestoreException.Code.PERMISSION_DENIED -> {
-                    Result.failure(SecurityException("Not authorized to edit pet"))
-                }
-
-                FirebaseFirestoreException.Code.UNAVAILABLE -> {
-                    Result.failure(IOException("Network unavailable"))
-                }
-
-                else -> {
-                    Result.failure(e)
-                }
-            }
         } catch (e: Exception) {
             Result.failure(e)
-
         }
     }
 
