@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.decapitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,24 +84,31 @@ fun PetProfileCard(pet: PetForm) {
             ) {
                 Spacer(modifier = Modifier.height(contentTopSpacer))
 
-                Row(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        textAlign = TextAlign.Center,
-                        text = pet.name,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 36.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    PublicPetIcon(isPublic = pet.isPublic)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            modifier = Modifier.widthIn(max = 260.dp),
+                            text = pet.name,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 36.sp,
+                            lineHeight = 42.sp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        PublicPetIcon(isPublic = pet.isPublic)
+                    }
                 }
-
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -145,8 +154,7 @@ fun PetProfileCard(pet: PetForm) {
             IconStatusUI(
                 status = pet.iconStatus,
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(40.dp),
+                    .align(Alignment.BottomEnd),
                 iconSize = 46
             )
         }
@@ -308,7 +316,8 @@ fun NotesCard(
                 text = note,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
-                maxLines = 4
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

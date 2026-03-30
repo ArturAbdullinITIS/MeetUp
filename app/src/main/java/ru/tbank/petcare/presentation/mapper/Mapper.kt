@@ -95,7 +95,7 @@ fun Gender.toIndex(): Int {
 
 fun PetForm.toDomain(): Pet {
     return Pet(
-        id = "",
+        id = id,
         ownerId = "",
         gameScore = 0,
         name = name,
@@ -109,5 +109,21 @@ fun PetForm.toDomain(): Pet {
         photoUrl = photoUrl
     )
 }
+
+fun Pet.toForm(): PetForm {
+    return PetForm(
+        id = id,
+        name = name,
+        breed = breed,
+        gender = gender,
+        isPublic = isPublic,
+        note = note,
+        weight = weight.toString(),
+        dateOfBirth = dateOfBirth,
+        iconStatus = iconStatus,
+        photoUrl = photoUrl
+    )
+}
+
 
 

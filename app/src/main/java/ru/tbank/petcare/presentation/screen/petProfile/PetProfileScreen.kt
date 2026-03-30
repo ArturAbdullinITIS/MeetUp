@@ -77,6 +77,7 @@ private fun PetProfileContent(
             text = stringResource(R.string.create_activity_button),
             enabled = true
         )
+        Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()

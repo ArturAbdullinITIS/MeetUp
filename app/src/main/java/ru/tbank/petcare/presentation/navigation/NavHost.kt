@@ -22,6 +22,7 @@ import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
+import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
@@ -115,6 +116,14 @@ fun NavHost(
                         petId = route.petId,
                         onNavigateToEdit = {
                             backStack.add(Route.EditPet(route.petId))
+                        }
+                    )
+                }
+                entry<Route.EditPet> { route ->
+                    EditPetScreen(
+                        petId = route.petId,
+                        onEditClick = {
+                            backStack.removeLastOrNull()
                         }
                     )
                 }

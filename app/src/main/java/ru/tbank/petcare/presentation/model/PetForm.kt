@@ -4,6 +4,7 @@ import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 
 data class PetForm(
+    val id: String = "",
     val name: String = "",
     val breed: String = "",
     val gender: Gender = Gender.MALE,

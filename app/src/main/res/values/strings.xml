@@ -61,4 +61,5 @@
     <string name="create_activity_button">Create Activity</string>
     <string name="profile_button">Profile button</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="edit_pet">Edit Pet</string>
 </resources>
