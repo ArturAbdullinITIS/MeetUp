@@ -99,7 +99,11 @@ fun NavHost(
                     PublicProfilesScreen()
                 }
                 entry<Route.AddPet> {
-                    AddPetScreen()
+                    AddPetScreen(
+                        onAddClick = {
+                            backStack.removeLastOrNull()
+                        }
+                    )
                 }
             }
         )

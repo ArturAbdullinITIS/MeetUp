@@ -9,7 +9,7 @@ data class Pet(
     val breed: String = "",
     val gender: Gender = Gender.UNKNOWN,
     val isPublic: Boolean = false,
-    val notes: String = "",
+    val note: String = "",
     val gameScore: Int = 0,
     val ownerId: String = "",
     val weight: Double = 0.0,

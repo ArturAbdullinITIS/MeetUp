@@ -1,14 +1,8 @@
 package ru.tbank.petcare.presentation.screen.addpet
 
-import android.R.attr.label
-import android.R.attr.maxLines
-import android.R.attr.singleLine
-import android.graphics.drawable.Icon
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,19 +37,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.common.AddPetProfilePicture
 import ru.tbank.petcare.presentation.common.CustomButton
-import ru.tbank.petcare.presentation.mapper.toIndex
+import ru.tbank.petcare.presentation.common.CustomSegmentedControlButton
+import ru.tbank.petcare.presentation.common.CustomTextField
+import ru.tbank.petcare.presentation.common.DobDatePickerDialog
+import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
+import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
 import ru.tbank.petcare.utils.DateFormater
 
 
 @Composable
 fun AddPetScreen(
+    onAddClick: () -> Unit
 ) {
-    AddPetContent()
+    AddPetContent(onAddClick)
 }
 
 @Composable
 fun AddPetContent(
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddPetViewModel = hiltViewModel()
 ) {
@@ -192,13 +193,14 @@ fun AddPetContent(
                 }
             )
             CustomTextField(
-                value = state.petUIModel.notes,
+                value = state.petUIModel.note,
                 onValueChange = {
                     viewModel.processCommand(AddPetCommand.InputNotes(it))
                 },
                 placeholder = stringResource(R.string.note_pet_placeholder),
                 label = stringResource(R.string.features_notes),
-                maxLines = 4
+                maxLines = 4,
+                minLines = 4
             )
             PublicProfileCardSwitch(
                 checked = state.petUIModel.isPublic,
@@ -209,7 +211,10 @@ fun AddPetContent(
             CustomButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.isButtonEnabled,
-                onClick = {},
+                onClick = {
+                    viewModel.processCommand(AddPetCommand.AddPet)
+                    onAddClick()
+                },
                 content = {},
                 text = stringResource(R.string.add_pet)
             )

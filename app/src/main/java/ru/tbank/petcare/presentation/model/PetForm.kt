@@ -8,7 +8,7 @@ data class PetForm(
     val breed: String = "",
     val gender: Gender = Gender.MALE,
     val isPublic: Boolean = false,
-    val notes: String = "",
+    val note: String = "",
     val weight: String = "",
     val dateOfBirth: Long = 0L,
     val iconStatus: IconStatus = IconStatus.NONE,

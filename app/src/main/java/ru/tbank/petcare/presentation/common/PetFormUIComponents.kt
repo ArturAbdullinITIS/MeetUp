@@ -1,7 +1,5 @@
-package ru.tbank.petcare.presentation.screen.addpet
-import android.R.attr.label
-import android.R.attr.maxLines
-import android.R.attr.singleLine
+package ru.tbank.petcare.presentation.common
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,7 +52,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,103 +65,7 @@ import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
 import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
 import java.util.Locale
-import kotlin.math.max
-
-
-@Composable
-fun CustomTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    label: String,
-    maxLines: Int,
-    singleLine: Boolean = false,
-    readOnly: Boolean = false,
-    trailingIcon: (@Composable () -> Unit)? = null,
-    keyBoardOption: KeyboardOptions = KeyboardOptions.Default
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        LabelText(
-            text = label
-        )
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    fontWeight = FontWeight.Normal
-                )
-            },
-            shape = RoundedCornerShape(32.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
-                unfocusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
-            ),
-            maxLines = maxLines,
-            singleLine = singleLine,
-            readOnly = readOnly,
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyBoardOption,
-        )
-    }
-
-}
-
-@Composable
-fun LabelText(
-    text: String
-) {
-    Text(
-        text = text.uppercase(),
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 11.sp,
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-        letterSpacing = 1.1.sp
-    )
-}
-
-@Composable
-fun SelectableIconStatus(
-    content: @Composable () -> Unit,
-    onClick: () -> Unit,
-    isSelected: Boolean
-) {
-    Surface(
-        modifier = Modifier.size(48.dp),
-        shape = CircleShape,
-        border = if (isSelected) {
-            BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
-        } else null,
-        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f) else MaterialTheme.colorScheme.onSurface.copy(
-            alpha = 0.1f
-        ),
-    ) {
-        IconButton(
-            onClick = onClick,
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(
-                    alpha = 0.5f
-                )
-            )
-        ) {
-            content()
-        }
-    }
-}
-
+import kotlin.math.min
 
 @Composable
 fun PublicProfileCardSwitch(
@@ -176,7 +77,7 @@ fun PublicProfileCardSwitch(
         shape = RoundedCornerShape(32.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
-            )
+        )
     ) {
         Row(
             modifier = Modifier
@@ -227,6 +128,102 @@ fun PublicProfileCardSwitch(
     }
 }
 
+
+@Composable
+fun CustomTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    label: String,
+    maxLines: Int,
+    minLines: Int = 1,
+    singleLine: Boolean = false,
+    readOnly: Boolean = false,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    keyBoardOption: KeyboardOptions = KeyboardOptions.Default
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        LabelText(
+            text = label
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            shape = RoundedCornerShape(32.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent
+            ),
+            maxLines = maxLines,
+            singleLine = singleLine,
+            readOnly = readOnly,
+            trailingIcon = trailingIcon,
+            keyboardOptions = keyBoardOption,
+            minLines = minLines
+        )
+    }
+
+}
+
+@Composable
+fun LabelText(
+    text: String
+) {
+    Text(
+        text = text.uppercase(),
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 11.sp,
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+        letterSpacing = 1.1.sp
+    )
+}
+@Composable
+fun SelectableIconStatus(
+    content: @Composable () -> Unit,
+    onClick: () -> Unit,
+    isSelected: Boolean
+) {
+    Surface(
+        modifier = Modifier.size(48.dp),
+        shape = CircleShape,
+        border = if (isSelected) {
+            BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
+        } else null,
+        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f) else MaterialTheme.colorScheme.onSurface.copy(
+            alpha = 0.1f
+        ),
+    ) {
+        IconButton(
+            onClick = onClick,
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.5f
+                )
+            )
+        ) {
+            content()
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DobDatePickerDialog(
@@ -270,7 +267,7 @@ fun SelectableIconStatusRow(
     Column(
         modifier = Modifier.fillMaxWidth(),
 
-    ) {
+        ) {
         LabelText(
             text = stringResource(R.string.select_icon)
         )
@@ -400,19 +397,18 @@ fun AddPetProfilePicture(
 ) {
     Column {
         Box{
-            Surface(
+            Box(
                 modifier = Modifier
                     .size(128.dp)
-                    .padding(3.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(4.dp),
             ) {
                 Box(modifier = Modifier
-                    .padding(4.dp)
                     .fillMaxSize()
                     .clip(CircleShape)
                     .background(
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
                     )
                     .clickable(
                         onClick = onClick
@@ -534,10 +530,14 @@ fun CustomTextFieldPreview() {
             onValueChange = {},
             placeholder = "Enter pet name",
             label = "Pet Name",
-            maxLines = 1
+            maxLines = 1,
+            minLines = 1
         )
     }
 }
+
+
+
 
 
 

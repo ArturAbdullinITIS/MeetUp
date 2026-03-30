@@ -71,7 +71,7 @@ class AddPetViewModel @Inject constructor(
             is AddPetCommand.InputNotes -> {
                 _state.update { state ->
                     state.copy(
-                        petUIModel = state.petUIModel.copy(notes = command.notes)
+                        petUIModel = state.petUIModel.copy(note = command.note)
                     )
                 }
             }
@@ -109,7 +109,7 @@ sealed interface AddPetCommand {
     data class InputWeight(val weight: String): AddPetCommand
     data class InputDateOfBirth(val dateOfBirth: Long): AddPetCommand
     data class ChangeGender(val gender: Gender): AddPetCommand
-    data class InputNotes(val notes: String): AddPetCommand
+    data class InputNotes(val note: String): AddPetCommand
     data class AddPhotoUrl(val url: String): AddPetCommand
     object IsPublic: AddPetCommand
     object AddPet: AddPetCommand

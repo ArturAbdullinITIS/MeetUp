@@ -105,7 +105,7 @@ fun PetForm.toDomain(): Pet {
         breed = breed,
         gender = gender,
         isPublic = isPublic,
-        notes = notes,
+        note = note,
         weight = weight.toDouble(),
         dateOfBirth = dateOfBirth,
         iconStatus = iconStatus,
