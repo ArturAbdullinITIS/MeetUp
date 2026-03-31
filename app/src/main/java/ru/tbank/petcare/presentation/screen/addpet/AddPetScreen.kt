@@ -45,6 +45,7 @@ import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
 import ru.tbank.petcare.utils.DateFormater
+import ru.tbank.petcare.utils.filterWeightInput
 
 
 @Composable
@@ -220,24 +221,4 @@ private fun AddPetContent(
             )
         }
     }
-}
-
-private fun filterWeightInput(raw: String, maxLen: Int = 5): String {
-    val normalized = raw.replace(',', '.')
-
-    val filtered = buildString {
-        var dotUsed = false
-        for (ch in normalized) {
-            when {
-                ch.isDigit() -> append(ch)
-                ch == '.' && !dotUsed -> {
-                    if (isEmpty()) continue
-                    append('.')
-                    dotUsed = true
-                }
-            }
-        }
-    }
-
-    return filtered.take(maxLen)
 }

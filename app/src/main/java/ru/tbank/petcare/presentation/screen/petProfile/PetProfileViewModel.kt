@@ -64,6 +64,3 @@ class PetProfileViewModel @AssistedInject constructor(
     }
 }
 
-data class PetProfileState(
-    val petProfileUIModel: PetForm = PetForm()
-)
