@@ -136,12 +136,3 @@ sealed interface EditPetCommand {
     object IsPublic: EditPetCommand
     object EditPet: EditPetCommand
 }
-
-
-data class EditPetState(
-    val petUIModel: PetForm = PetForm()
-) {
-    val isButtonEnabled: Boolean
-        get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank()
-                && petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".")
-}

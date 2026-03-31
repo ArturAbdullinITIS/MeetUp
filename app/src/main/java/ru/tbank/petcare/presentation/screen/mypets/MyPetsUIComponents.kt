@@ -45,25 +45,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.toUpperCase
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.presentation.common.IconStatusUI
-import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.utils.DateFormater
-import ru.tbank.petcare.presentation.mapper.getIconStatusUI
 import ru.tbank.petcare.presentation.mapper.getQuickActionUI
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
-import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
 
 @Composable
 fun MyPetsPetCard(
@@ -315,52 +308,3 @@ fun EmptyPetsTitle(modifier: Modifier = Modifier) {
         )
     }
 }
-
-@Preview
-@Composable
-fun QuickActionRowPreview() {
-    PetCareTheme(darkTheme = false) {
-        QuickActionRow(
-            onWalkClick = {},
-            onGroomingClick = {},
-            onVetClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun MyPetsPetCardPreview() {
-    PetCareTheme {
-        MyPetsPetCard(
-            pet = Pet(
-                id = "1",
-                name = "Cooper",
-                breed = "Golden Retriever",
-                photoUrl = "",
-                dateOfBirth = System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 365 * 3,
-                iconStatus = IconStatus.SPARKLES
-            ),
-            onPetClick = {}
-        )
-    }
-
-}
-
-
-@Preview
-@Composable
-fun TipCardPreview() {
-    PetCareTheme {
-        TipCard(
-            text = "Consistency is key! Logging daily walks\n" +
-                    "helps track long-term mobility and\n" +
-                    "cardiovascular health for your furry friend.",
-            onClick = {}
-        )
-    }
-}
-
-
-
-
