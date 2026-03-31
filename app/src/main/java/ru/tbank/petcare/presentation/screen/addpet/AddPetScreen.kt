@@ -47,7 +47,6 @@ import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
 import ru.tbank.petcare.utils.DateFormater
 import ru.tbank.petcare.utils.filterWeightInput
 
-
 @Composable
 fun AddPetScreen(
     onAddClick: () -> Unit
@@ -143,8 +142,7 @@ private fun AddPetContent(
                     modifier = Modifier.weight(0.3f),
                     value = state.petUIModel.weight,
                     onValueChange = { text ->
-                            viewModel.processCommand(AddPetCommand.InputWeight(filterWeightInput(text)))
-
+                        viewModel.processCommand(AddPetCommand.InputWeight(filterWeightInput(text)))
                     },
                     placeholder = stringResource(R.string.weight_pet_placeholder),
                     label = stringResource(R.string.weight_kg),

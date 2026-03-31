@@ -1,14 +1,8 @@
 package ru.tbank.petcare.data.repository
 
-import android.util.Log
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.input.key.Key.Companion.I
-import com.google.android.play.integrity.internal.l
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -97,7 +91,6 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun editPet(pet: Pet): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (pet.id.isBlank()) {
@@ -128,13 +121,13 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deletePet(petId: String): Result<Unit> = withContext(Dispatchers.IO){
+    override suspend fun deletePet(petId: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            if(petId.isBlank()) {
+            if (petId.isBlank()) {
                 return@withContext Result.failure(IllegalArgumentException("Pet ID cannot be blank"))
             }
             val currentUserId = firebaseAuth.currentUser?.uid
-            if(currentUserId == null) {
+            if (currentUserId == null) {
                 return@withContext Result.failure(IllegalStateException("Not Authenticated"))
             }
 
@@ -159,8 +152,8 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPetById(petId: String): Flow<Pet> = callbackFlow{
-        if(petId.isBlank()) {
+    override fun getPetById(petId: String): Flow<Pet> = callbackFlow {
+        if (petId.isBlank()) {
             close(IllegalArgumentException("Pet ID cannot be blank"))
             return@callbackFlow
         }
@@ -216,7 +209,6 @@ class PetsRepositoryImpl @Inject constructor(
                     trySend(emptyList())
                     return@addSnapshotListener
                 }
-
 
                 val tips = snapshot.documents.mapNotNull { doc ->
                     val dto = doc.toObject(TipDto::class.java)
