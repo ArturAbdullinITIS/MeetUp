@@ -67,7 +67,7 @@
     <string name="welcome_back_login_title">Welcome back!</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="dont_have_account">Dont have an Account?</string>
+    <string name="dont_have_account">Dont have an Account? </string>
     <string name="register">Register</string>
     <string name="join_register_title">Join our family!</string>
     <string name="already_have_account">"Already have an account? "</string>
@@ -80,4 +80,9 @@
     <string name="or_divider">OR</string>
     <string name="pet_care">Pet care</string>
     <string name="register_placeholder_email">hello@petcare.com</string>
+    <string name="error_email_blank">The email cannot be empty.</string>
+    <string name="error_email_invalid">Invalid email format.</string>
+    <string name="error_password_short">The password length must be at least 6 characters.</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="error_passwords_do_not_match">Password do not match.</string>
 </resources>

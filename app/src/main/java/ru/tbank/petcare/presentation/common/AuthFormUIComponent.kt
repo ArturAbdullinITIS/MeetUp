@@ -45,6 +45,7 @@ import ru.tbank.petcare.presentation.ui.theme.PlusJakartaSans
 @Composable
 fun EmailTextField(
     value: String,
+    emailError: String,
     onValueChange: (String) -> Unit,
 ) {
     TextField(
@@ -60,6 +61,15 @@ fun EmailTextField(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
         },
+        isError = emailError.isNotBlank(),
+        supportingText = {
+            if (emailError.isNotBlank()) {
+                Text(
+                    text = emailError,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
             unfocusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
@@ -73,6 +83,7 @@ fun EmailTextField(
 @Composable
 fun PasswordTextField(
     value: String,
+    passwordError: String,
     onValueChange: (String) -> Unit,
     onIconClick: () -> Unit,
     isPasswordVisible: Boolean
@@ -84,6 +95,15 @@ fun PasswordTextField(
         onValueChange = onValueChange,
         shape = RoundedCornerShape(32.dp),
         singleLine = true,
+        isError = passwordError.isNotBlank(),
+        supportingText = {
+            if (passwordError.isNotBlank()) {
+                Text(
+                    text = passwordError,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
         placeholder = {
             Text(
                 text = stringResource(R.string.register_placeholder_password),
@@ -266,22 +286,22 @@ fun PetCareHeader(){
     }
 }
 
-@Preview
-@Composable
-fun EmailPreview() {
-    EmailTextField(
-        value = "",
-        onValueChange = {},
-    )
-}
-
-@Preview
-@Composable
-fun PassowrdPreview(){
-    PasswordTextField(
-        value = "1234",
-        onValueChange = {},
-        onIconClick = { } ,
-        isPasswordVisible = false ,
-    )
-}
+//@Preview
+//@Composable
+//fun EmailPreview() {
+//    EmailTextField(
+//        value = "",
+//        onValueChange = {},
+//    )
+//}
+//
+//@Preview
+//@Composable
+//fun PassowrdPreview(){
+//    PasswordTextField(
+//        value = "1234",
+//        onValueChange = {},
+//        onIconClick = { } ,
+//        isPasswordVisible = false ,
+//    )
+//}

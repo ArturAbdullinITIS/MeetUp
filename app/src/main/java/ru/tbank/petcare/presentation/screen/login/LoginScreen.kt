@@ -37,8 +37,21 @@ import ru.tbank.petcare.presentation.common.PetCareHeader
 
 @Composable
 fun LoginScreen(
-    onNavigateToRegistration: () -> Unit = {},
-    onLoginSuccess: () -> Unit = {},
+    onNavigateToRegistration: () -> Unit,
+    onLoginSuccess: () -> Unit,
+) {
+    LoginContent(
+        onNavigateToRegistration = onNavigateToRegistration,
+        onLoginSuccess = onLoginSuccess
+    )
+}
+
+
+@Composable
+fun LoginContent(
+
+    onNavigateToRegistration: () -> Unit,
+    onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -49,98 +62,105 @@ fun LoginScreen(
             onLoginSuccess()
         }
     }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        PetCareHeader()
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background
-    ) { innerPadding ->
+        Spacer(modifier = Modifier.weight(0.5f))
+
+        AuthTitle(
+            mainTitle = stringResource(R.string.login),
+            subTitle = stringResource(R.string.welcome_back_login_title)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .weight(2f)
+                .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(32.dp))
+                .padding(vertical = 16.dp, horizontal = 16.dp),
         ) {
-            PetCareHeader()
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.email).uppercase(),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                EmailTextField(
+                    value = state.email,
+                    emailError = state.emailError,
+                    onValueChange = { viewModel.processCommand(LoginCommand.InputEmail(it)) },
+                )
+            }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            AuthTitle(
-                mainTitle = stringResource(R.string.login),
-                subTitle = stringResource(R.string.welcome_back_login_title)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.password).uppercase(),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                PasswordTextField(
+                    value = state.password,
+                    passwordError = state.passwordError,
+                    onValueChange = { viewModel.processCommand(LoginCommand.InputPassword(it)) },
+                    onIconClick = { viewModel.processCommand(LoginCommand.ChangePasswordVisibility(!state.isPasswordVisibility)) },
+                    isPasswordVisible = state.isPasswordVisibility,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CustomButton(
+                text = stringResource(R.string.login),
+                onClick = { viewModel.processCommand(LoginCommand.LoginUserFromEmailAndPassword) }
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
+            CustomDivider()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            GoogleButton(
+                onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) }
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(48.dp))
-                    .padding(vertical = 32.dp, horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = stringResource(R.string.email).uppercase(),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                    EmailTextField(
-                        value = state.email,
-                        onValueChange = { viewModel.processCommand(LoginCommand.InputEmail(it)) },
-                    )
-                }
-
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = stringResource(R.string.password).uppercase(),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                    PasswordTextField(
-                        value = state.password,
-                        onValueChange = { viewModel.processCommand(LoginCommand.InputPassword(it)) },
-                        onIconClick = { viewModel.processCommand(LoginCommand.ChangePasswordVisibility(!state.isPasswordVisibility)) },
-                        isPasswordVisible = state.isPasswordVisibility,
-                    )
-                }
-                CustomButton(
-                    text = stringResource(R.string.login),
-                    onClick = { viewModel.processCommand(LoginCommand.LoginUserFromEmailAndPassword) }
+                Text(
+                    text = stringResource(R.string.dont_have_account),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    fontSize = 14.sp
                 )
-                CustomDivider()
-
-                GoogleButton(
-                    onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) }
+                Text(
+                    text = stringResource(R.string.register),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.clickable {
+                        onNavigateToRegistration()
+                    }
                 )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.dont_have_account),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = stringResource(R.string.register),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
-                        modifier = Modifier.clickable {
-                            onNavigateToRegistration()
-                        }
-                    )
-                }
             }
         }
     }
 }
+

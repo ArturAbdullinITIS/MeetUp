@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    @ApplicationContext private val applicationContext: Context
+    private val credentialManager: CredentialManager,
+    private val getCredentialRequest: GetCredentialRequest
 ) : AuthRepository {
     override suspend fun registerWithEmailAndPassword(
         email: String,
@@ -32,21 +33,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signInWithGoogle(activityContext: Context): Result<Unit> {
-        val credentialManager = CredentialManager.create(activityContext)
-
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(applicationContext.getString(R.string.default_web_client_id))
-            .setFilterByAuthorizedAccounts(false)
-            .build()
-
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
         return try {
             val result = credentialManager.getCredential(
                 context = activityContext,
-                request = request
+                request = getCredentialRequest
             )
 
             val credential = result.credential

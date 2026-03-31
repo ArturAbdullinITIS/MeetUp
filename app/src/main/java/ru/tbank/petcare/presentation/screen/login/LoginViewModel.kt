@@ -8,14 +8,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.domain.model.ValidationError
 import ru.tbank.petcare.domain.usecase.LoginUseCase
 import ru.tbank.petcare.domain.usecase.SignInWithGoogleUseCase
+import ru.tbank.petcare.domain.usecase.ValidateEmailUseCase
+import ru.tbank.petcare.domain.usecase.ValidatePasswordUseCase
+import ru.tbank.petcare.utils.ErrorParser
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val signInWithGoogleUseCase: SignInWithGoogleUseCase
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val errorParser: ErrorParser
 ): ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -30,12 +37,20 @@ class LoginViewModel @Inject constructor(
             }
             is LoginCommand.InputEmail -> {
                 _state.update { state ->
-                    state.copy(email = command.email)
+                    val emailResult = validateEmailUseCase(command.email)
+                    state.copy(
+                        email = command.email,
+                        emailError = errorParser.parse(emailResult.error as ValidationError)
+                    )
                 }
             }
             is LoginCommand.InputPassword -> {
                 _state.update { state ->
-                    state.copy(password = command.password)
+                    val passwordResult = validatePasswordUseCase(command.password)
+                    state.copy(
+                        password = command.password,
+                        passwordError = errorParser.parse(passwordResult.error as ValidationError)
+                    )
                 }
             }
             LoginCommand.LoginUserFromEmailAndPassword -> loginWithEmail()
@@ -57,7 +72,23 @@ class LoginViewModel @Inject constructor(
 
     private fun loginWithEmail() {
         val currentState = _state.value
-        if (currentState.email.isBlank() || currentState.password.isBlank()) return
+        val emailResult = validateEmailUseCase(currentState.email)
+        val passwordResult = validatePasswordUseCase(currentState.password)
+
+        val hasError = listOf(
+            emailResult,
+            passwordResult
+        ).any { !it.isSuccess }
+
+        if (hasError) {
+             _state.update { state ->
+                 state.copy(
+                     emailError = errorParser.parse(emailResult.error as ValidationError),
+                     passwordError = errorParser.parse(passwordResult.error as ValidationError)
+                 )
+             }
+             return
+        }
 
         _state.update { state -> state.copy(isLoading = true) }
 
@@ -82,12 +113,3 @@ sealed interface LoginCommand {
     data object LoginUserFromEmailAndPassword: LoginCommand
     data class SignInWithGoogle(val context: Context): LoginCommand
 }
-
-data class LoginState(
-    val email: String = "",
-    val password: String = "",
-    val isPasswordVisibility: Boolean = false,
-    val isSuccess: Boolean = false,
-    val isLoading: Boolean = false,
-    val error: String = ""
-)

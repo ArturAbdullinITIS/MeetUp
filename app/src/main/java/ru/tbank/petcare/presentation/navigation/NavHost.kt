@@ -52,12 +52,16 @@ fun NavHost(
                             icon = currentRoute.getConfig()?.icon ?: R.drawable.photo_placeholder
                         )
                     } else {
-                        ScreenTitleRow(
-                            name = getRouteTitle(currentRoute),
-                            onClick = {
-                                backStack.removeLastOrNull()
-                            }
-                        )
+                        if (currentRoute is Route.Login || currentRoute is Route.Register ) {
+                            null
+                        } else {
+                            ScreenTitleRow(
+                                name = getRouteTitle(currentRoute),
+                                onClick = {
+                                    backStack.removeLastOrNull()
+                                }
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
