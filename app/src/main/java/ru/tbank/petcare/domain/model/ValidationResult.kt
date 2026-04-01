@@ -1,12 +1,14 @@
 package ru.tbank.petcare.domain.model
 
-data class ValidationResult(
+data class ValidationResult<T>(
     val isSuccess: Boolean = false,
-    val error: ValidationError? = null
+    val error: ErrorType? = null,
+    val data: T? = null,
 )
 
-enum class ValidationError {
-    NAME_SHORT,
-    WEIGHT_INVALID,
-    DATE_OF_BIRTH_INVALID,
+sealed class ErrorType(open val message: String? = null) {
+    data class NetworkError(override val message: String? = null) : ErrorType(message)
+    data class AuthenticationError(override val message: String? = null) : ErrorType(message)
+    data class CommonError(override val message: String? = null) : ErrorType(message)
+    data class NotFoundError(override val message: String? = null) : ErrorType(message)
 }
