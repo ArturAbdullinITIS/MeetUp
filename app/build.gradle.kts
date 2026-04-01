@@ -77,6 +77,10 @@ dependencies {
     // Formating
     detektPlugins(libs.detekt.formatting)
 
+    // Network
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
 
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)

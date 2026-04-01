@@ -281,7 +281,7 @@ fun PublicPetIcon(
             Icon(
                 painter = painterResource(R.drawable.ic_public),
                 contentDescription = stringResource(R.string.pet_is_public_icon),
-                tint = if (isPublic){
+                tint = if (isPublic) {
                     MaterialTheme.colorScheme.onPrimaryContainer
                 } else {
                     MaterialTheme.colorScheme.onSurface.copy(
