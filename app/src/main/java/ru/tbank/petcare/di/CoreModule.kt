@@ -8,8 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider
 import ru.tbank.petcare.utils.ResourceProviderImpl
 
@@ -25,30 +24,18 @@ interface CoreModule {
 
     companion object {
 
-        @Module
-        @InstallIn(SingletonComponent::class)
-        object DispatchersModule {
-
-            @IoDispatcher
-            @Provides
-            @Singleton
-            fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-            @MainDispatcher
-            @Provides
-            @Singleton
-            fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
-
-            @DefaultDispatcher
-            @Provides
-            @Singleton
-            fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
-        }
-
         @Provides
         @Singleton
         fun provideResourceProvider(@ApplicationContext context: Context): ResourceProviderImpl {
             return ResourceProviderImpl(context)
+        }
+
+        @Provides
+        @Singleton
+        fun provideErrorParser(
+            resourceProvider: ResourceProvider
+        ): ErrorParser {
+            return ErrorParser(resourceProvider)
         }
     }
 }

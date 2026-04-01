@@ -2,7 +2,7 @@ package ru.tbank.petcare.data.mapper
 
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
-import ru.tbank.petcare.data.remote.network.AnimalResponseDto
+import ru.tbank.petcare.data.remote.network.AnimalsResponseDto
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
@@ -49,7 +49,7 @@ fun TipDto.toDomain(): Tip {
     )
 }
 
-fun AnimalResponseDto.toEntities(): List<PetInfo> {
+fun AnimalsResponseDto.toEntities(): List<PetInfo> {
     return this.map { animalDtoItem ->
         PetInfo(
             commonName = animalDtoItem.characteristics.commonName,

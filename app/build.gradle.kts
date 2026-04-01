@@ -25,7 +25,6 @@ android {
         }
     }
 
-    val booksApi = localProperties.getProperty("API_KEY") ?: ""
     val baseUrl = localProperties.getProperty("BASE_URL") ?: ""
 
     defaultConfig {
@@ -91,6 +90,7 @@ dependencies {
 
     // Formating
     detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt)
 
     // Network
     implementation(libs.retrofit)

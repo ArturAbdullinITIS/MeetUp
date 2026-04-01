@@ -1,6 +1,7 @@
 package ru.tbank.petcare.data.repository
 
 import android.R.attr.data
+import android.R.attr.name
 import android.util.Log.e
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,10 +17,14 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
+import ru.tbank.petcare.data.mapper.toEntities
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
+import ru.tbank.petcare.data.remote.network.AnimalsApiService
+import ru.tbank.petcare.di.IoDispatcher
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.PetsRepository
@@ -29,7 +34,8 @@ import kotlin.jvm.java
 class PetsRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
-    private val dispatcherIO: CoroutineDispatcher
+    @IoDispatcher private val dispatcherIO: CoroutineDispatcher,
+    private val animalsApiService: AnimalsApiService
 ) : PetsRepository {
     companion object {
         private const val OWNER_ID_KEY = "owner_id"
@@ -39,6 +45,7 @@ class PetsRepositoryImpl @Inject constructor(
 
         private const val PET_ID_ERROR = "Pet ID cannot be blank"
         private const val NOT_AUTHENTICATED_ERROR = "Not Authenticated"
+        private const val PET_NOT_FOUND_ERROR = "Pet not found"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
@@ -94,21 +101,21 @@ class PetsRepositoryImpl @Inject constructor(
             when (e.code) {
                 FirebaseFirestoreException.Code.PERMISSION_DENIED ->
                     ValidationResult(
-                        error = ErrorType.NetworkError(e.message)
+                        error = ErrorType.NetworkError(e.message ?: "")
                     )
 
                 FirebaseFirestoreException.Code.UNAVAILABLE ->
                     ValidationResult(
-                        error = ErrorType.NetworkError(e.message)
+                        error = ErrorType.NetworkError(e.message ?: "")
                     )
 
                 else -> ValidationResult(
-                    error = ErrorType.NetworkError(e.message)
+                    error = ErrorType.NetworkError(e.message ?: "")
                 )
             }
         } catch (e: Exception) {
             ValidationResult(
-                error = ErrorType.CommonError(e.message)
+                error = ErrorType.CommonError(e.message ?: "")
             )
         }
     }
@@ -146,7 +153,7 @@ class PetsRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             ValidationResult(
-                error = ErrorType.CommonError(e.message)
+                error = ErrorType.CommonError(e.message ?: "")
             )
         }
     }
@@ -173,25 +180,25 @@ class PetsRepositoryImpl @Inject constructor(
             when (e.code) {
                 FirebaseFirestoreException.Code.PERMISSION_DENIED -> {
                     ValidationResult(
-                        error = ErrorType.NetworkError(e.message)
+                        error = ErrorType.NetworkError(e.message ?: "")
                     )
                 }
 
                 FirebaseFirestoreException.Code.UNAVAILABLE -> {
                     ValidationResult(
-                        error = ErrorType.NetworkError(e.message)
+                        error = ErrorType.NetworkError(e.message ?: "")
                     )
                 }
 
                 else -> {
                     ValidationResult(
-                        error = ErrorType.NetworkError(e.message)
+                        error = ErrorType.NetworkError(e.message ?: "")
                     )
                 }
             }
         } catch (e: Exception) {
             ValidationResult(
-                error = ErrorType.CommonError(e.message)
+                error = ErrorType.CommonError(e.message ?: "")
             )
         }
     }
@@ -270,6 +277,24 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }.flowOn(dispatcherIO)
 
-    override suspend fun getPetInfo(): ValidationResult<Pet> = withContext(dispatcherIO) {
+    override suspend fun getPetInfo(breed: String): ValidationResult<PetInfo> = withContext(dispatcherIO) {
+        try {
+            val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
+            val animal = animalsResponse.find { it.commonName.equals(breed, ignoreCase = true) }
+            return@withContext if (animal != null) {
+                ValidationResult(
+                    data = animal,
+                    isSuccess = true
+                )
+            } else {
+                ValidationResult(
+                    error = ErrorType.NotFoundError(PET_NOT_FOUND_ERROR)
+                )
+            }
+        } catch (e: Exception) {
+            ValidationResult(
+                error = ErrorType.NetworkError(e.message ?: "")
+            )
+        }
     }
 }

@@ -6,9 +6,9 @@ data class ValidationResult<T>(
     val data: T? = null,
 )
 
-sealed class ErrorType(open val message: String? = null) {
-    data class NetworkError(override val message: String? = null) : ErrorType(message)
-    data class AuthenticationError(override val message: String? = null) : ErrorType(message)
-    data class CommonError(override val message: String? = null) : ErrorType(message)
-    data class NotFoundError(override val message: String? = null) : ErrorType(message)
+sealed class ErrorType(open val message: String = "") {
+    data class NetworkError(override val message: String = "") : ErrorType(message)
+    data class AuthenticationError(override val message: String = "") : ErrorType(message)
+    data class CommonError(override val message: String = "") : ErrorType(message)
+    data class NotFoundError(override val message: String = "") : ErrorType(message)
 }

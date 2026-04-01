@@ -5,7 +5,7 @@ import retrofit2.http.Query
 
 interface AnimalsApiService {
     @GET("animals")
-    suspend fun getAnimalByName(
+    suspend fun getAnimalsByBreed(
         @Query("name") name: String
-    ): AnimalResponseDto
+    ): AnimalsResponseDto
 }

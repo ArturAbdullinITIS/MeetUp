@@ -2,6 +2,7 @@ package ru.tbank.petcare.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.ValidationResult
 
@@ -20,5 +21,5 @@ interface PetsRepository {
 
     fun getAllTips(): Flow<List<Tip>>
 
-    suspend fun getPetInfo(): ValidationResult<Pet>
+    suspend fun getPetInfo(breed: String): ValidationResult<PetInfo>
 }
