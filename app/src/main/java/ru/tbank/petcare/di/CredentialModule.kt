@@ -12,7 +12,6 @@ import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
 import ru.tbank.petcare.R
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 interface CredentialModule {

@@ -8,11 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.tbank.petcare.domain.model.ValidationError
 import ru.tbank.petcare.domain.usecase.LoginUseCase
 import ru.tbank.petcare.domain.usecase.SignInWithGoogleUseCase
-import ru.tbank.petcare.domain.usecase.ValidateEmailUseCase
-import ru.tbank.petcare.domain.usecase.ValidatePasswordUseCase
 import ru.tbank.petcare.utils.ErrorParser
 import javax.inject.Inject
 
@@ -20,10 +17,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val errorParser: ErrorParser
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
@@ -31,85 +26,93 @@ class LoginViewModel @Inject constructor(
     fun processCommand(command: LoginCommand) {
         when (command) {
             is LoginCommand.ChangePasswordVisibility -> {
-                _state.update {state ->
+                _state.update { state ->
                     state.copy(isPasswordVisibility = !state.isPasswordVisibility)
                 }
             }
+
             is LoginCommand.InputEmail -> {
                 _state.update { state ->
-                    val emailResult = validateEmailUseCase(command.email)
                     state.copy(
                         email = command.email,
-                        emailError = errorParser.parse(emailResult.error as ValidationError)
+                        emailError = ""
                     )
                 }
             }
+
             is LoginCommand.InputPassword -> {
                 _state.update { state ->
-                    val passwordResult = validatePasswordUseCase(command.password)
                     state.copy(
                         password = command.password,
-                        passwordError = errorParser.parse(passwordResult.error as ValidationError)
+                        passwordError = ""
                     )
                 }
             }
-            LoginCommand.LoginUserFromEmailAndPassword -> loginWithEmail()
 
+            LoginCommand.LoginUserFromEmailAndPassword -> loginWithEmail()
             is LoginCommand.SignInWithGoogle -> signInWithGoogle(command.context)
         }
     }
 
-    private fun signInWithGoogle(context: android.content.Context) {
-        _state.update { state -> state.copy(isLoading = true) }
+    private fun signInWithGoogle(context: Context) {
+        _state.update { it.copy(isLoading = true) }
+
         viewModelScope.launch {
-            signInWithGoogleUseCase(context).onSuccess {
-                _state.update { state -> state.copy(isSuccess = true, error = "", isLoading = false) }
-            }.onFailure { error ->
-                _state.update { state -> state.copy(isSuccess = false, error = error.message ?: "Unknown error", isLoading = false) }
+            val result = signInWithGoogleUseCase(context)
+
+            if (result.isSuccess) {
+                _state.update { it.copy(isSuccess = true, error = "", isLoading = false) }
+            } else {
+                _state.update {
+                    it.copy(
+                        isSuccess = false,
+                        error = errorParser.getErrorMessage(result.error),
+                        isLoading = false
+                    )
+                }
             }
         }
     }
 
     private fun loginWithEmail() {
         val currentState = _state.value
-        val emailResult = validateEmailUseCase(currentState.email)
-        val passwordResult = validatePasswordUseCase(currentState.password)
-
-        val hasError = listOf(
-            emailResult,
-            passwordResult
-        ).any { !it.isSuccess }
-
-        if (hasError) {
-             _state.update { state ->
-                 state.copy(
-                     emailError = errorParser.parse(emailResult.error as ValidationError),
-                     passwordError = errorParser.parse(passwordResult.error as ValidationError)
-                 )
-             }
-             return
+        _state.update {
+            it.copy(
+                isLoading = true,
+                emailError = "",
+                passwordError = "",
+                error = ""
+            )
         }
-
-        _state.update { state -> state.copy(isLoading = true) }
 
         viewModelScope.launch {
-            loginUseCase(
+            val result = loginUseCase(
                 email = currentState.email,
                 password = currentState.password
-            ).onSuccess {
-                _state.update { state -> state.copy(isSuccess = true, error = "", isLoading = false) }
-            }.onFailure { error ->
-                _state.update { state -> state.copy(isSuccess = false, error = error.message ?: "Unknown error", isLoading = false) }
+            )
+
+            if (result.isSuccess) {
+                _state.update { it.copy(isSuccess = true, error = "", isLoading = false) }
+            } else {
+                val message = errorParser.getErrorMessage(result.error)
+                _state.update {
+                    it.copy(
+                        isSuccess = false,
+                        isLoading = false,
+                        emailError = message,
+                        passwordError = message,
+                        error = message
+                    )
+                }
             }
         }
-
     }
 }
 
 sealed interface LoginCommand {
-    data class InputEmail(val email: String): LoginCommand
-    data class InputPassword(val password: String): LoginCommand
-    data class ChangePasswordVisibility(val isVisible: Boolean): LoginCommand
-    data object LoginUserFromEmailAndPassword: LoginCommand
-    data class SignInWithGoogle(val context: Context): LoginCommand
+    data class InputEmail(val email: String) : LoginCommand
+    data class InputPassword(val password: String) : LoginCommand
+    data class ChangePasswordVisibility(val isVisible: Boolean) : LoginCommand
+    data object LoginUserFromEmailAndPassword : LoginCommand
+    data class SignInWithGoogle(val context: Context) : LoginCommand
 }

@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.tbank.petcare.R
@@ -58,7 +56,7 @@ fun EmailTextField(
             Text(
                 text = stringResource(R.string.register_placeholder_email),
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
             )
         },
         isError = emailError.isNotBlank(),
@@ -66,17 +64,17 @@ fun EmailTextField(
             if (emailError.isNotBlank()) {
                 Text(
                     text = emailError,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
         },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
             unfocusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
-
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-        )
+            errorContainerColor = Color.Transparent,
+        ),
     )
 }
 
@@ -86,11 +84,10 @@ fun PasswordTextField(
     passwordError: String,
     onValueChange: (String) -> Unit,
     onIconClick: () -> Unit,
-    isPasswordVisible: Boolean
+    isPasswordVisible: Boolean,
 ) {
     TextField(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
         shape = RoundedCornerShape(32.dp),
@@ -100,7 +97,7 @@ fun PasswordTextField(
             if (passwordError.isNotBlank()) {
                 Text(
                     text = passwordError,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
         },
@@ -108,52 +105,47 @@ fun PasswordTextField(
             Text(
                 text = stringResource(R.string.register_placeholder_password),
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
             )
         },
-        visualTransformation = if (!isPasswordVisible) {
-            PasswordVisualTransformation()
-        } else {
+        visualTransformation = if (isPasswordVisible) {
             VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
         },
-        trailingIcon ={
+        trailingIcon = {
+            val modifier = Modifier
+                .clip(CircleShape)
+                .clickable(onClick = onIconClick)
+
             if (isPasswordVisible) {
                 Icon(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(
-                            onClick = onIconClick
-                        ),
+                    modifier = modifier,
                     imageVector = Icons.Default.RemoveRedEye,
-                    contentDescription = stringResource(R.string.eye_on_icon_description)
+                    contentDescription = stringResource(R.string.eye_on_icon_description),
                 )
-            }
-            else {
+            } else {
                 Icon(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(
-                            onClick = onIconClick
-                        ),
+                    modifier = modifier,
                     painter = painterResource(R.drawable.ic_eye_off),
-                    contentDescription = stringResource(R.string.eye_off)
+                    contentDescription = stringResource(R.string.eye_off),
                 )
             }
         },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
             unfocusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
-
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-        )
+            errorContainerColor = Color.Transparent,
+        ),
     )
 }
 
 @Composable
 fun CustomButton(
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = Modifier
@@ -163,26 +155,25 @@ fun CustomButton(
         shape = RoundedCornerShape(32.dp),
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.surface,
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
     ) {
         Text(
             text = text,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Icon(
             imageVector = Icons.Filled.ArrowForward,
-            contentDescription = stringResource(R.string.arrow_forward_icon_description)
+            contentDescription = stringResource(R.string.arrow_forward_icon_description),
         )
     }
-
 }
 
 @Composable
 fun GoogleButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     OutlinedButton(
         modifier = Modifier
@@ -191,34 +182,32 @@ fun GoogleButton(
         onClick = onClick,
         shape = RoundedCornerShape(32.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
     ) {
         Image(
             painter = painterResource(R.drawable.ic_google),
-            contentDescription = stringResource(R.string.google_icon)
+            contentDescription = stringResource(R.string.google_icon),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(R.string.google_button),
             fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
         )
-
     }
 }
 
 @Composable
-fun CustomDivider(){
+fun CustomDivider() {
     Row(
-        modifier = Modifier.fillMaxWidth()
-        ,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Divider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
         )
         Text(
             text = stringResource(R.string.or_divider),
@@ -230,7 +219,7 @@ fun CustomDivider(){
         Divider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
         )
     }
 }
@@ -238,16 +227,16 @@ fun CustomDivider(){
 @Composable
 fun AuthTitle(
     mainTitle: String,
-    subTitle: String
-){
+    subTitle: String,
+) {
     Column(
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = mainTitle,
             fontSize = 36.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -255,22 +244,21 @@ fun AuthTitle(
         Text(
             text = subTitle,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Light
+            fontWeight = FontWeight.Light,
         )
     }
 }
 
 @Composable
-fun PetCareHeader(){
+fun PetCareHeader() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_pet_care_main),
             contentDescription = stringResource(R.string.pet_care),
-            modifier = Modifier
-                .size(32.dp),
+            modifier = Modifier.size(32.dp),
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
         )
 
@@ -281,27 +269,7 @@ fun PetCareHeader(){
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
-            fontSize = 24.sp
+            fontSize = 24.sp,
         )
     }
 }
-
-//@Preview
-//@Composable
-//fun EmailPreview() {
-//    EmailTextField(
-//        value = "",
-//        onValueChange = {},
-//    )
-//}
-//
-//@Preview
-//@Composable
-//fun PassowrdPreview(){
-//    PasswordTextField(
-//        value = "1234",
-//        onValueChange = {},
-//        onIconClick = { } ,
-//        isPasswordVisible = false ,
-//    )
-//}

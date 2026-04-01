@@ -46,7 +46,7 @@ fun NavHost(
                             icon = currentRoute.getConfig()?.icon ?: R.drawable.photo_placeholder
                         )
                     } else {
-                        if (currentRoute is Route.Login || currentRoute is Route.Register ) {
+                        if (currentRoute is Route.Login || currentRoute is Route.Register) {
                             null
                         } else {
                             ScreenTitleRow(

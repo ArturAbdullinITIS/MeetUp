@@ -11,13 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,7 +44,7 @@ fun LoginScreen(
         onLoginSuccess = onLoginSuccess
     )
 }
-
+private const val HALF_WEIGHT = 0.5f
 
 @Composable
 fun LoginContent(
@@ -56,7 +55,6 @@ fun LoginContent(
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
-
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
             onLoginSuccess()
@@ -70,7 +68,7 @@ fun LoginContent(
     ) {
         PetCareHeader()
 
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(HALF_WEIGHT))
 
         AuthTitle(
             mainTitle = stringResource(R.string.login),
@@ -115,7 +113,11 @@ fun LoginContent(
                     value = state.password,
                     passwordError = state.passwordError,
                     onValueChange = { viewModel.processCommand(LoginCommand.InputPassword(it)) },
-                    onIconClick = { viewModel.processCommand(LoginCommand.ChangePasswordVisibility(!state.isPasswordVisibility)) },
+                    onIconClick = {
+                        viewModel.processCommand(
+                            LoginCommand.ChangePasswordVisibility(!state.isPasswordVisibility)
+                        )
+                    },
                     isPasswordVisible = state.isPasswordVisibility,
                 )
             }
@@ -163,4 +165,3 @@ fun LoginContent(
         }
     }
 }
-

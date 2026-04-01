@@ -82,7 +82,7 @@ class PetsRepositoryImpl @Inject constructor(
         try {
             val currentUserId = firebaseAuth.currentUser?.uid
                 ?: return@withContext ValidationResult(
-                    error = ErrorType.AuthenticationError(
+                    error = ErrorType.FirebaseAuthenticationError(
                         NOT_AUTHENTICATED_ERROR
                     )
                 )
@@ -130,7 +130,7 @@ class PetsRepositoryImpl @Inject constructor(
 
             val currentUserId = firebaseAuth.currentUser?.uid
                 ?: return@withContext ValidationResult(
-                    error = ErrorType.AuthenticationError(NOT_AUTHENTICATED_ERROR)
+                    error = ErrorType.FirebaseAuthenticationError(NOT_AUTHENTICATED_ERROR)
                 )
 
             val updates = mapOf(
@@ -168,7 +168,7 @@ class PetsRepositoryImpl @Inject constructor(
             val currentUserId = firebaseAuth.currentUser?.uid
             if (currentUserId == null) {
                 return@withContext ValidationResult(
-                    error = ErrorType.AuthenticationError(NOT_AUTHENTICATED_ERROR)
+                    error = ErrorType.FirebaseAuthenticationError(NOT_AUTHENTICATED_ERROR)
                 )
             }
 
@@ -288,7 +288,7 @@ class PetsRepositoryImpl @Inject constructor(
                 )
             } else {
                 ValidationResult(
-                    error = ErrorType.NotFoundError(PET_NOT_FOUND_ERROR)
+                    error = ErrorType.FirebaseAuthenticationError(PET_NOT_FOUND_ERROR)
                 )
             }
         } catch (e: Exception) {

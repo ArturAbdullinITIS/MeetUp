@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -34,7 +33,6 @@ import ru.tbank.petcare.presentation.common.EmailTextField
 import ru.tbank.petcare.presentation.common.GoogleButton
 import ru.tbank.petcare.presentation.common.PasswordTextField
 import ru.tbank.petcare.presentation.common.PetCareHeader
-
 
 @Composable
 fun RegistrationScreen(
@@ -69,7 +67,7 @@ fun RegistrationContent(
             .padding(horizontal = 16.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+    ) {
         PetCareHeader()
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -115,7 +113,11 @@ fun RegistrationContent(
                     value = state.password,
                     passwordError = state.passwordError,
                     onValueChange = { viewModel.processCommand(RegistrationCommand.InputPassword(it)) },
-                    onIconClick = { viewModel.processCommand(RegistrationCommand.ChangePasswordVisibility(!state.isPasswordVisibility)) },
+                    onIconClick = {
+                        viewModel.processCommand(
+                            RegistrationCommand.ChangePasswordVisibility(!state.isPasswordVisibility)
+                        )
+                    },
                     isPasswordVisible = state.isPasswordVisibility,
                 )
             }
@@ -132,7 +134,11 @@ fun RegistrationContent(
                     value = state.repeatPassword,
                     passwordError = state.repeatPasswordError,
                     onValueChange = { viewModel.processCommand(RegistrationCommand.InputRepeatPassword(it)) },
-                    onIconClick = { viewModel.processCommand(RegistrationCommand.ChangeRepeatPasswordVisibility(!state.isRepeatPasswordVisibility)) },
+                    onIconClick = {
+                        viewModel.processCommand(
+                            RegistrationCommand.ChangeRepeatPasswordVisibility(!state.isRepeatPasswordVisibility)
+                        )
+                    },
                     isPasswordVisible = state.isRepeatPasswordVisibility,
                 )
             }
