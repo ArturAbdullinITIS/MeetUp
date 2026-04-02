@@ -7,7 +7,14 @@ formatting:
 complexity:
   LongMethod:
     active: true
-    threshold: 150
+    threshold: 220
+  TooManyFunctions:
+    active: true
+    thresholdInClasses: 20
+    thresholdInFiles: 30
+    thresholdInInterfaces: 20
+    thresholdInObjects: 20
+    thresholdInEnums: 20
 
 naming:
   FunctionNaming:
