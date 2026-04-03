@@ -1,11 +1,11 @@
 package ru.tbank.petcare.presentation.screen.mypets
 
 import ru.tbank.petcare.domain.model.Tip
-import ru.tbank.petcare.presentation.model.PetCardUiModel
+import ru.tbank.petcare.presentation.model.PetCardUIModel
 
 data class MyPetsState(
     val tips: List<Tip> = emptyList(),
-    val pets: List<PetCardUiModel> = emptyList(),
+    val pets: List<PetCardUIModel> = emptyList(),
     val isPetsLoading: Boolean = false,
     val isTipsLoading: Boolean = false,
     val errorMessage: String? = null,

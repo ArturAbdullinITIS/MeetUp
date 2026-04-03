@@ -82,14 +82,14 @@ class RegistrationViewModel @Inject constructor(
         )
 
         if (emailError != null || passwordError != null || repeatPasswordError != null) {
-             _state.update {
-                 it.copy(
-                     emailError = emailError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
-                     passwordError = passwordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
-                     repeatPasswordError = repeatPasswordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
-                 )
-             }
-             return
+            _state.update {
+                it.copy(
+                    emailError = emailError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                    passwordError = passwordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                    repeatPasswordError = repeatPasswordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                )
+            }
+            return
         }
 
         _state.update {

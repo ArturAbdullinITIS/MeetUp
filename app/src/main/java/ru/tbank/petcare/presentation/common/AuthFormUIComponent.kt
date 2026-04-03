@@ -30,7 +30,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -80,7 +79,6 @@ fun EmailTextField(
 fun PasswordTextField(
     value: String,
     passwordError: String,
-    placeholder: String,
     onValueChange: (String) -> Unit,
     onIconClick: () -> Unit,
     isPasswordVisible: Boolean,
@@ -102,7 +100,7 @@ fun PasswordTextField(
         },
         placeholder = {
             Text(
-                text = placeholder,
+                text = stringResource(R.string.password),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
             )

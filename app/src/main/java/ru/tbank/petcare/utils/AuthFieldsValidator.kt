@@ -36,4 +36,3 @@ class AuthFieldsValidator @Inject constructor() {
         const val MIN_PASSWORD_LENGTH = 6
     }
 }
-

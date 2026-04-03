@@ -123,7 +123,6 @@ fun LoginContent(
                 PasswordTextField(
                     value = state.password,
                     passwordError = state.passwordError,
-                    placeholder = stringResource(R.string.password),
                     onValueChange = { viewModel.processCommand(LoginCommand.InputPassword(it)) },
                     onIconClick = {
                         viewModel.processCommand(

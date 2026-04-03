@@ -6,7 +6,7 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
-import ru.tbank.petcare.presentation.model.PetCardUiModel
+import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
@@ -121,11 +121,11 @@ fun Pet.toForm(): PetForm {
     )
 }
 
-fun Pet.toPetCardUiModel(): PetCardUiModel {
+fun Pet.toPetCardUiModel(): PetCardUIModel {
     val age = DateFormatter.formatAgeYearsMonths(dateOfBirth)
     val subtitle = listOf(breed, age).filter { it.isNotBlank() }.joinToString(" • ")
 
-    return PetCardUiModel(
+    return PetCardUIModel(
         id = id,
         name = name,
         photoUrl = photoUrl,

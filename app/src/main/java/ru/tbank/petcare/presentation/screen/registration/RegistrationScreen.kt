@@ -117,7 +117,6 @@ fun RegistrationContent(
                 PasswordTextField(
                     value = state.password,
                     passwordError = state.passwordError,
-                    placeholder = stringResource(R.string.password),
                     onValueChange = { viewModel.processCommand(RegistrationCommand.InputPassword(it)) },
                     onIconClick = {
                         viewModel.processCommand(
@@ -139,7 +138,6 @@ fun RegistrationContent(
                 PasswordTextField(
                     value = state.repeatPassword,
                     passwordError = state.repeatPasswordError,
-                    placeholder = stringResource(R.string.repeat_password),
                     onValueChange = { viewModel.processCommand(RegistrationCommand.InputRepeatPassword(it)) },
                     onIconClick = {
                         viewModel.processCommand(

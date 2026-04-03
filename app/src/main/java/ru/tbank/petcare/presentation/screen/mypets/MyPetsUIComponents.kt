@@ -45,14 +45,14 @@ import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.mapper.getQuickActionUI
-import ru.tbank.petcare.presentation.model.PetCardUiModel
+import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
 
 @Composable
 fun MyPetsPetCard(
-    pet: PetCardUiModel,
+    pet: PetCardUIModel,
     onPetClick: (String) -> Unit
 ) {
     Card(
