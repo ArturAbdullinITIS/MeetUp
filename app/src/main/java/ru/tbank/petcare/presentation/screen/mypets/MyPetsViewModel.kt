@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.GetAllPetsUseCase
 import ru.tbank.petcare.domain.usecase.GetAllTipsUseCase
-import ru.tbank.petcare.presentation.mapper.toPetCardUiModel
+import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
 import ru.tbank.petcare.utils.ResourceProvider
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ class MyPetsViewModel @Inject constructor(
                     }
                 }
                 .collect { pets ->
-                    val uiPets = pets.map { it.toPetCardUiModel() }
+                    val uiPets = pets.map { it.toPetCardUIModel() }
                     _state.update {
                         it.copy(
                             pets = uiPets,

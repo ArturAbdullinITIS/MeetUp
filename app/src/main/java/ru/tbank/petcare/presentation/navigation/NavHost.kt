@@ -102,7 +102,11 @@ fun NavHost(
                     )
                 }
                 entry<NavigationBarRoute.Public> {
-                    PublicProfilesScreen()
+                    PublicProfilesScreen(
+                        onPetClick = { petId ->
+                            backStack.add(Route.PublicPetProfile(petId))
+                        }
+                    )
                 }
                 entry<Route.AddPet> {
                     AddPetScreen(

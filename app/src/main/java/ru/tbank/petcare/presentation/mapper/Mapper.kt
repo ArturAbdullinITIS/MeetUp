@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.mapper
 
+import android.R.attr.subtitle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import ru.tbank.petcare.R
@@ -9,6 +10,7 @@ import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
+import ru.tbank.petcare.presentation.model.PublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
@@ -121,7 +123,7 @@ fun Pet.toForm(): PetForm {
     )
 }
 
-fun Pet.toPetCardUiModel(): PetCardUIModel {
+fun Pet.toPetCardUIModel(): PetCardUIModel {
     val age = DateFormatter.formatAgeYearsMonths(dateOfBirth)
     val subtitle = listOf(breed, age).filter { it.isNotBlank() }.joinToString(" • ")
 
@@ -131,5 +133,22 @@ fun Pet.toPetCardUiModel(): PetCardUIModel {
         photoUrl = photoUrl,
         iconStatus = iconStatus,
         subtitle = subtitle
+    )
+}
+
+fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
+    val gameScoreField = "$gameScore pts"
+    val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->
+        if (ch.isLowerCase()) ch.titlecase() else ch.toString()
+    }
+    return PublicPetCardUIModel(
+        id = id,
+        name = name,
+        photoUrl = photoUrl,
+        note = note,
+        gameScore = gameScoreField,
+        gender = genderFormatted,
+        breed = breed,
+        isMine = isMine
     )
 }

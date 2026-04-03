@@ -11,6 +11,9 @@ sealed interface Route {
     data class PetProfile(val petId: String) : Route
 
     @Serializable
+    data class PublicPetProfile(val petId: String) : Route
+
+    @Serializable
     data object AddPet : Route
 
     @Serializable
@@ -81,5 +84,6 @@ fun getRouteTitle(route: Route): Int {
         is Route.EditPet -> R.string.edit_pet_screen_title
         Route.Login -> R.string.login
         Route.Register -> R.string.register
+        is Route.PublicPetProfile -> R.string.public_pet_profile
     }
 }

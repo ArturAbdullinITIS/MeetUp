@@ -109,4 +109,8 @@
     <string name="could_not_edit">Could not edit</string>
     <string name="could_not_upload_photo">Could not upload photo</string>
     <string name="date_placeholder">dd.mm.yyyy</string>
+    <string name="game_score_icon">Game Score Icon</string>
+    <string name="community_feed">Community Feed</string>
+    <string name="meet_the_pack">Meet the Pack</string>
+    <string name="public_pet_profile">Public Pet Profile</string>
 </resources>

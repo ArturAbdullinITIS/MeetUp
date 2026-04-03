@@ -16,4 +16,6 @@ interface AuthRepository {
         email: String,
         password: String
     ): ValidationResult<Unit>
+
+    suspend fun getCurrentUserId(): ValidationResult<String>
 }
