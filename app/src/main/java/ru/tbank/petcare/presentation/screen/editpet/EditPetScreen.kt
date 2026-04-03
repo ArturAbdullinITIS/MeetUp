@@ -17,10 +17,12 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,6 +89,16 @@ private fun EditPetContent(
             }
         }
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                EditPetEvent.Saved -> onEditClick()
+                is EditPetEvent.Error -> {
+                }
+            }
+        }
+    }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showDeleteDialog) {
@@ -130,7 +142,11 @@ private fun EditPetContent(
                         "image/*"
                     )
                 },
-                imageUrl = state.petUIModel.photoUrl
+                imageUrl = if (state.selectedPhotoUri == null) {
+                    state.petUIModel.photoUrl
+                } else {
+                    state.selectedPhotoUri.toString()
+                }
             )
             Text(
                 text = stringResource(R.string.add_profile_photo),
@@ -243,10 +259,13 @@ private fun EditPetContent(
                 enabled = state.isButtonEnabled,
                 onClick = {
                     viewModel.processCommand(EditPetCommand.EditPet)
-                    onEditClick()
                 },
-                content = {},
-                text = stringResource(R.string.edit_pet)
+                content = {
+                    if (state.isEditing) {
+                        CircularProgressIndicator()
+                    }
+                },
+                text = if (!state.isEditing) stringResource(R.string.edit_pet) else null,
             )
             CustomButton(
                 modifier = Modifier.fillMaxWidth(),

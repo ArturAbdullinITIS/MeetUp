@@ -129,7 +129,7 @@ fun CustomButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     content: (@Composable () -> Unit)? = null,
-    text: String,
+    text: String? = null,
     enabled: Boolean,
     bg: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     fg: Color = MaterialTheme.colorScheme.primaryContainer
@@ -149,16 +149,17 @@ fun CustomButton(
         ),
         enabled = enabled
     ) {
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        if (text != null) {
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         content?.invoke()
     }
 }
-
 
 @Preview
 @Composable

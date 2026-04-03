@@ -119,7 +119,7 @@ fun PetProfileCard(
                     textAlign = TextAlign.Center,
                     text = pet.breed.uppercase(),
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
 

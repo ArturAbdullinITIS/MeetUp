@@ -97,4 +97,16 @@
     <string name="you_can_not_restore_it">You can not restore it.</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="nothing_to_share">Nothing to share!</string>
+    <string name="info_title">Info Title</string>
+    <string name="breed_information">Breed Information</string>
+    <string name="group">Group</string>
+    <string name="lifespan">Lifespan</string>
+    <string name="skin_type">Skin Type</string>
+    <string name="diet">Diet</string>
+    <string name="locations">Locations</string>
+    <string name="unknown">Unknown</string>
+    <string name="could_not_save_pet">Could not save pet</string>
+    <string name="could_not_edit">Could not edit</string>
+    <string name="could_not_upload_photo">Could not upload photo</string>
 </resources>

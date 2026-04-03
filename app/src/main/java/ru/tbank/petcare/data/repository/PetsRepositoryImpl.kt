@@ -293,7 +293,7 @@ class PetsRepositoryImpl @Inject constructor(
         try {
             val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
             Log.d("ANIMAL_RESPONSE", animalsResponse.toString())
-            val animal = animalsResponse.find { it.commonName.equals(breed, ignoreCase = true) }
+            val animal = animalsResponse.find { it.breedName.equals(breed, ignoreCase = true) }
             return@withContext if (animal != null) {
                 ValidationResult(
                     data = animal,

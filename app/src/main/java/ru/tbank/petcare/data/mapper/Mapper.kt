@@ -52,7 +52,7 @@ fun TipDto.toDomain(): Tip {
 fun AnimalsResponseDto.toEntities(): List<PetInfo> {
     return this.map { animalDtoItem ->
         PetInfo(
-            commonName = animalDtoItem.characteristics.commonName,
+            breedName = animalDtoItem.name,
             diet = animalDtoItem.characteristics.diet,
             group = animalDtoItem.characteristics.group,
             lifespan = animalDtoItem.characteristics.lifespan,

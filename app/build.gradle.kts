@@ -106,6 +106,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
 
+    implementation(libs.compose.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
