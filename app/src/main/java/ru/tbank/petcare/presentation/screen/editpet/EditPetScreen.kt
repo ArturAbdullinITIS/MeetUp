@@ -48,8 +48,9 @@ import ru.tbank.petcare.presentation.common.CustomTextField
 import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
-import ru.tbank.petcare.utils.DateFormater
+import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.filterWeightInput
+import java.util.Date
 
 @Composable
 fun EditPetScreen(
@@ -202,7 +203,7 @@ private fun EditPetContent(
                 )
             }
             CustomTextField(
-                value = DateFormater.formatDob(state.petUIModel.dateOfBirth),
+                value = DateFormatter.formatDob(state.petUIModel.dateOfBirth),
                 onValueChange = { },
                 placeholder = "dd.mm.yyyy",
                 label = stringResource(R.string.date_of_birth),
@@ -224,11 +225,12 @@ private fun EditPetContent(
             )
             if (showDobPicker) {
                 DobDatePickerDialog(
-                    initialMillisUtc = state.petUIModel.dateOfBirth,
+                    initialMillisUtc = state.petUIModel.dateOfBirth?.time ?: 0L,
                     onDismiss = { showDobPicker = false },
                     onConfirm = { millisUtc ->
                         showDobPicker = false
-                        viewModel.processCommand(EditPetCommand.InputDateOfBirth(millisUtc))
+                        val normalizedDate = DateFormatter.normalizeToStartOfDayUtc(Date(millisUtc))
+                        viewModel.processCommand(EditPetCommand.InputDateOfBirth(normalizedDate))
                     }
                 )
             }

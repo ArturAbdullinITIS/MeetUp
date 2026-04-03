@@ -49,14 +49,14 @@ import ru.tbank.petcare.presentation.mapper.getQuickActionUI
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
-import ru.tbank.petcare.utils.DateFormater
+import ru.tbank.petcare.utils.DateFormatter
 
 @Composable
 fun MyPetsPetCard(
     pet: Pet,
     onPetClick: (String) -> Unit
 ) {
-    val age = DateFormater.formatAgeYearsMonths(pet.dateOfBirth)
+    val age = DateFormatter.formatAgeYearsMonths(pet.dateOfBirth)
     Card(
         modifier = Modifier
             .fillMaxWidth(),

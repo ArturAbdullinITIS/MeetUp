@@ -17,6 +17,7 @@ import ru.tbank.petcare.domain.usecase.AddPetUseCase
 import ru.tbank.petcare.domain.usecase.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.utils.ResourceProvider
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -153,7 +154,7 @@ sealed interface AddPetCommand {
     data class ChangeIconStatus(val iconStatus: IconStatus) : AddPetCommand
     data class InputBreed(val breed: String) : AddPetCommand
     data class InputWeight(val weight: String) : AddPetCommand
-    data class InputDateOfBirth(val dateOfBirth: Long) : AddPetCommand
+    data class InputDateOfBirth(val dateOfBirth: Date?) : AddPetCommand
     data class ChangeGender(val gender: Gender) : AddPetCommand
     data class InputNotes(val note: String) : AddPetCommand
     data class SelectPhoto(val uri: Uri) : AddPetCommand

@@ -23,6 +23,7 @@ import ru.tbank.petcare.domain.usecase.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ResourceProvider
+import java.util.Date
 
 @HiltViewModel(assistedFactory = EditPetViewModel.Factory::class)
 class EditPetViewModel @AssistedInject constructor(
@@ -136,7 +137,7 @@ class EditPetViewModel @AssistedInject constructor(
         _state.update { it.copy(petUIModel = it.petUIModel.copy(weight = weight)) }
     }
 
-    private fun setDateOfBirth(dateOfBirth: Long) {
+    private fun setDateOfBirth(dateOfBirth: Date?) {
         _state.update { it.copy(petUIModel = it.petUIModel.copy(dateOfBirth = dateOfBirth)) }
     }
 
@@ -163,7 +164,7 @@ sealed interface EditPetCommand {
     data class ChangeIconStatus(val iconStatus: IconStatus) : EditPetCommand
     data class InputBreed(val breed: String) : EditPetCommand
     data class InputWeight(val weight: String) : EditPetCommand
-    data class InputDateOfBirth(val dateOfBirth: Long) : EditPetCommand
+    data class InputDateOfBirth(val dateOfBirth: Date?) : EditPetCommand
     data class ChangeGender(val gender: Gender) : EditPetCommand
     data class InputNotes(val note: String) : EditPetCommand
     data class SelectPhoto(val uri: Uri) : EditPetCommand

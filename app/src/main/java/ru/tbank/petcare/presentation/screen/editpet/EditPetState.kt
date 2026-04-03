@@ -11,5 +11,5 @@ data class EditPetState(
 ) {
     val isButtonEnabled: Boolean
         get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank() &&
-            petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".") && !isEditing
+            petUIModel.dateOfBirth?.time != 0L && !petUIModel.weight.endsWith(".") && !isEditing
 }
