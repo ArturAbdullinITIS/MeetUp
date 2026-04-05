@@ -5,6 +5,7 @@ import android.util.Log
 import coil3.network.HttpException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
@@ -23,19 +24,22 @@ import ru.tbank.petcare.BuildConfig
 import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
 import ru.tbank.petcare.data.mapper.toEntities
-import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
 import ru.tbank.petcare.data.remote.network.animals.AnimalsApiService
 import ru.tbank.petcare.data.remote.network.cloudinary.CloudinaryApiService
 import ru.tbank.petcare.data.remote.network.cloudinary.ImageBytesProvider
 import ru.tbank.petcare.di.IoDispatcher
 import ru.tbank.petcare.domain.model.ErrorType
+import ru.tbank.petcare.domain.model.Gender
+import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.PetsRepository
+import java.util.Date
 import javax.inject.Inject
+import kotlin.collections.emptyList
 import kotlin.jvm.java
 
 class PetsRepositoryImpl @Inject constructor(
@@ -78,9 +82,7 @@ class PetsRepositoryImpl @Inject constructor(
                     return@addSnapshotListener
                 }
 
-                val pets = snapshot?.documents?.mapNotNull { document ->
-                    document.toObject(PetDto::class.java)?.toDomain()
-                } ?: emptyList()
+                val pets = snapshot?.documents?.map { it.toPetCompat() } ?: emptyList()
 
                 trySend(pets)
             }
@@ -227,7 +229,7 @@ class PetsRepositoryImpl @Inject constructor(
                     close(error)
                     return@addSnapshotListener
                 }
-                val pet = snapshot?.toObject(PetDto::class.java)?.toDomain()
+                val pet = snapshot?.toPetCompat()
                 if (pet != null) {
                     trySend(pet)
                 } else {
@@ -243,6 +245,8 @@ class PetsRepositoryImpl @Inject constructor(
         }
 
     override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow {
+        val currentUserId = firebaseAuth.currentUser?.uid
+
         val listener = collection
             .whereEqualTo(IS_PUBLIC_KEY, true)
             .addSnapshotListener { snapshot, error ->
@@ -251,9 +255,9 @@ class PetsRepositoryImpl @Inject constructor(
                     return@addSnapshotListener
                 }
 
-                val pets = snapshot?.documents?.mapNotNull { document ->
-                    document.toObject(PetDto::class.java)?.toDomain()
-                } ?: emptyList()
+                val pets = snapshot?.documents
+                    ?.map { it.toPetCompat() }
+                    ?.filter { it.ownerId != currentUserId } ?: emptyList()
 
                 trySend(pets)
             }
@@ -275,6 +279,10 @@ class PetsRepositoryImpl @Inject constructor(
                 }
 
                 val tips = snapshot.documents.mapNotNull { doc ->
+                    snapshot?.documents?.forEach { doc ->
+                        val raw = doc.get("date_of_birth")
+                        Log.d("DOB_DEBUG", "doc=${doc.id} dobType=${raw?.javaClass?.name} dobValue=$raw")
+                    }
                     val dto = doc.toObject(TipDto::class.java)
                     if (dto == null) {
                         null
@@ -347,4 +355,32 @@ class PetsRepositoryImpl @Inject constructor(
             ValidationResult(error = ErrorType.NetworkError(e.message ?: ""))
         }
     }
+}
+
+private fun DocumentSnapshot.getDobCompat(): Date? {
+    val raw = get("date_of_birth") ?: return null
+    return when (raw) {
+        is Timestamp -> raw.toDate()
+        is Date -> raw
+        is Long -> Date(raw)
+        is Double -> Date(raw.toLong())
+        else -> null
+    }
+}
+
+private fun DocumentSnapshot.toPetCompat(): Pet {
+    return Pet(
+        id = id,
+        name = getString("name") ?: "",
+        breed = getString("breed") ?: "",
+        weight = getDouble("weight") ?: 0.0,
+        dateOfBirth = getDobCompat(),
+        gender = Gender.getGenderFromValue(getString("gender") ?: ""),
+        iconStatus = IconStatus.getIconStatusFromValue(getString("icon_status") ?: ""),
+        isPublic = getBoolean("is_public") ?: false,
+        note = getString("note") ?: "",
+        photoUrl = getString("photo_url") ?: "",
+        gameScore = (getLong("game_score") ?: 0L).toInt(),
+        ownerId = getString("owner_id") ?: ""
+    )
 }

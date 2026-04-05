@@ -17,10 +17,12 @@ import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
+import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
+import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 
@@ -102,7 +104,11 @@ fun NavHost(
                     )
                 }
                 entry<NavigationBarRoute.Public> {
-                    PublicProfilesScreen()
+                    PublicProfilesScreen(
+                        onPetClick = { petId ->
+                            backStack.add(Route.PublicPetProfile(petId))
+                        }
+                    )
                 }
                 entry<Route.AddPet> {
                     AddPetScreen(
@@ -147,8 +153,23 @@ fun NavHost(
                         onNavigateToLogin = {
                             backStack.add(Route.Login)
                         },
-                        onRegisterSuccess = {
+                        onEmailRegisterSuccess = {
+                            backStack.add(Route.Continue)
+                        },
+                        onGoogleRegisterSuccess = {
                             backStack.clear()
+                            backStack.add(NavigationBarRoute.MyPets)
+                        }
+                    )
+                }
+                entry<Route.PublicPetProfile> { route ->
+                    PublicPetProfileScreen(
+                        petId = route.petId
+                    )
+                }
+                entry<Route.Continue> {
+                    ContinueRegistrationScreen(
+                        onContinue = {
                             backStack.add(NavigationBarRoute.MyPets)
                         }
                     )

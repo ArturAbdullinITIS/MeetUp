@@ -1,0 +1,59 @@
+package ru.tbank.petcare.presentation.screen.publicProfiles
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import ru.tbank.petcare.domain.usecase.GetAllPublicPetsUseCase
+import ru.tbank.petcare.domain.usecase.GetCurrentUserIdUseCase
+import ru.tbank.petcare.presentation.mapper.toPublicPetCardUIModel
+import javax.inject.Inject
+
+@HiltViewModel
+class PublicProfilesViewModel @Inject constructor(
+    private val getAllPublicPetsUseCase: GetAllPublicPetsUseCase,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase
+) : ViewModel() {
+    private val _state = MutableStateFlow(PublicProfilesState())
+    val state = _state.asStateFlow()
+
+    init {
+        loadPublicPets()
+    }
+
+    private fun loadPublicPets() {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    isPetsLoading = true,
+                    errorMessage = null
+                )
+            }
+            getAllPublicPetsUseCase()
+                .catch { exception ->
+                    _state.update { state ->
+                        state.copy(
+                            isPetsLoading = false,
+                            errorMessage = exception.message
+                        )
+                    }
+                }
+                .collect { pets ->
+                    val myId = getCurrentUserIdUseCase()
+                    if (myId.isSuccess) {
+                        val publicPetsUI = pets.map { it.toPublicPetCardUIModel(isMine = myId.data.equals(it.ownerId)) }
+                        _state.update { state ->
+                            state.copy(
+                                isPetsLoading = false,
+                                pets = publicPetsUI
+                            )
+                        }
+                    }
+                }
+        }
+    }
+}

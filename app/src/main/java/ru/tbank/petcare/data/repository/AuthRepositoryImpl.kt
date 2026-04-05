@@ -124,4 +124,19 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getCurrentUserId(): ValidationResult<String> {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            return ValidationResult(
+                isSuccess = true,
+                data = currentUser.uid
+            )
+        } else {
+            return ValidationResult(
+                isSuccess = false,
+                error = ErrorType.AuthValidation()
+            )
+        }
+    }
 }

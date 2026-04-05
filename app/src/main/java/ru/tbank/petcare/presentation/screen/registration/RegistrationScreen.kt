@@ -42,27 +42,39 @@ import ru.tbank.petcare.presentation.common.PetCareHeader
 @Composable
 fun RegistrationScreen(
     onNavigateToLogin: () -> Unit,
-    onRegisterSuccess: () -> Unit
+    onEmailRegisterSuccess: () -> Unit,
+    onGoogleRegisterSuccess: () -> Unit
 ) {
     RegistrationContent(
         onNavigateToLogin = onNavigateToLogin,
-        onRegisterSuccess = onRegisterSuccess
+        onEmailRegisterSuccess = onEmailRegisterSuccess,
+        onGoogleRegisterSuccess = onGoogleRegisterSuccess
     )
 }
 
 @Composable
 fun RegistrationContent(
     onNavigateToLogin: () -> Unit,
-    onRegisterSuccess: () -> Unit,
+    onEmailRegisterSuccess: () -> Unit,
+    onGoogleRegisterSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) {
-            onRegisterSuccess()
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is RegistrationEvent.Error -> {
+                }
+                RegistrationEvent.EmailRegistered -> {
+                    onEmailRegisterSuccess()
+                }
+                RegistrationEvent.GoogleRegistered -> {
+                    onGoogleRegisterSuccess()
+                }
+            }
         }
     }
 
