@@ -29,11 +29,11 @@ class SettingsRepositoryImpl @Inject constructor(
     override fun getSettings(): Flow<Settings> {
         return dataStore.data.map { prefs ->
             val language = runCatching {
-                Language.valueOf(prefs[Keys.LANGUAGE] ?: Language.RUSSIAN.name)
-            }.getOrDefault(Language.RUSSIAN)
+                Language.valueOf(prefs[LANGUAGE] ?: Language.ENGLISH.name)
+            }.getOrDefault(Language.ENGLISH)
             Settings(
                 language = language,
-                darkTheme = prefs[Keys.DARK_THEME] ?: false,
+                darkTheme = prefs[DARK_THEME] ?: false,
                 notifications = NotificationSettings(
                     enabled = prefs[NOTIF_ENABLED] ?: true,
                     walk = prefs[NOTIF_WALK] ?: true,

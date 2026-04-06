@@ -226,7 +226,7 @@ fun ThemeSegmentedControl(
             modifier = Modifier
                 .padding(4.dp)
                 .height(36.dp)
-                .width(156.dp),
+                .width(188.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(
@@ -295,7 +295,7 @@ fun LanguageSegmentedControl(
             modifier = Modifier
                 .padding(4.dp)
                 .height(36.dp)
-                .width(156.dp),
+                .width(188.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(
