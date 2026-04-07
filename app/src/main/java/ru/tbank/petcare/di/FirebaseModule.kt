@@ -6,11 +6,23 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.tbank.petcare.data.repository.ActivityRepositoryImpl
+import ru.tbank.petcare.data.repository.AuthRepositoryImpl
+import ru.tbank.petcare.data.repository.PetsRepositoryImpl
+import ru.tbank.petcare.domain.repository.ActivityRepository
+import ru.tbank.petcare.domain.repository.AuthRepository
+import ru.tbank.petcare.domain.repository.PetsRepository
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface FirebaseModule {
+
+    @Binds
+    @Singleton
+    fun bindActivityRepository(
+        impl: ActivityRepositoryImpl
+    ): ActivityRepository
 
     companion object {
 
