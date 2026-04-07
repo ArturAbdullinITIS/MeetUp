@@ -109,4 +109,20 @@
     <string name="could_not_edit">Could not edit</string>
     <string name="could_not_upload_photo">Could not upload photo</string>
     <string name="date_placeholder">dd.mm.yyyy</string>
+    <string name="notification_icon">Notification</string>
+    <string name="set_reminder_switch">Set Reminder</string>
+    <string name="get_notified_switch">Get notified for next session</string>
+    <string name="select_pet_label">Select pet</string>
+    <string name="goal_km">Km goal</string>
+    <string name="activity_notes">Activity Notes</string>
+    <string name="save_activity">Save Activity</string>
+    <string name="procedure_type">Prodcedure type</string>
+    <string name="actual_km">Actual km</string>
+    <string name="actual_km_placeholder">0.0</string>
+    <string name="goal_km_placeholder">0.0</string>
+    <string name="procedure_type_label">Procedure type</string>
+    <string name="select_procedure_placeholder">Select procedure</string>
+    <string name="duration_label">Duration (min)</string>
+    <string name="duration_placeholder">0</string>
+    <string name="could_not_save_activity">Could not save activity.</string>
 </resources>

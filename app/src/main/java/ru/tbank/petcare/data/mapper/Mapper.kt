@@ -1,9 +1,13 @@
 package ru.tbank.petcare.data.mapper
 
 import com.google.firebase.Timestamp
+import ru.tbank.petcare.data.remote.firebase.ActivityDto
+import ru.tbank.petcare.data.remote.firebase.GroomingActivityDto
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
 import ru.tbank.petcare.data.remote.network.animals.AnimalsResponseDto
+import ru.tbank.petcare.domain.model.Activity
+import ru.tbank.petcare.domain.model.ActivityDetails
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
@@ -63,4 +67,42 @@ fun AnimalsResponseDto.toEntities(): List<PetInfo> {
             locations = animalDtoItem.locations
         )
     }
+}
+
+fun Activity.toDto(): ActivityDto {
+    return ActivityDto(
+        id = id,
+        isReminder = isReminder,
+        notes = notes,
+        date = activityDate?.let { Timestamp(it) },
+        type = activityType.name,
+        details = when (val details = details) {
+            is ActivityDetails.Walk -> details.toMap()
+            is ActivityDetails.Grooming -> details.toMap()
+            is ActivityDetails.Vet -> details.toMap()
+            else -> emptyMap()
+        }
+    )
+}
+
+fun ActivityDetails.Walk.toMap(): Map<String, Any> {
+    return mapOf(
+        "goal" to goalKm.toDouble(),
+        "actual" to actualKm.toDouble()
+    )
+}
+
+fun ActivityDetails.Grooming.toMap(): Map<String, Any> {
+    return mapOf(
+        "procedure_type" to procedureType.name,
+        "duration_minutes" to durationMinutes.toInt(),
+        "cost" to groomingCost.toDouble()
+    )
+}
+
+fun ActivityDetails.Vet.toMap(): Map<String, Any> {
+    return mapOf(
+        "procedure_type" to procedureType.name,
+        "cost" to vetCost.toDouble()
+    )
 }

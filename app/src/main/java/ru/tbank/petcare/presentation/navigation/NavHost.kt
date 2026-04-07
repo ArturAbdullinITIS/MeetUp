@@ -3,16 +3,19 @@ package ru.tbank.petcare.presentation.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import ru.tbank.petcare.R
+import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
@@ -23,6 +26,7 @@ import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
+import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +36,7 @@ fun NavHost(
     val backStack = rememberSaveable {
         mutableStateListOf<Route>(Route.Register)
     }
-    val currentRoute = backStack.lastOrNull() ?: NavigationBarRoute.MyPets
+    val currentRoute = backStack.lastOrNull() ?: Route.Register
 
     val isBottomBar = currentRoute is NavigationBarRoute
 
@@ -98,6 +102,24 @@ fun NavHost(
                     MyPetsScreen(
                         onNavigateToProfile = { petId ->
                             backStack.add(Route.PetProfile(petId))
+                        },
+                        onWalkClick = {
+                            backStack.add(Route.CreateActivity(
+                                type = ActivityType.WALK.value,
+                                petId = ""
+                            ))
+                        },
+                        onGroomingClick = {
+                            backStack.add(Route.CreateActivity(
+                                type =ActivityType.GROOMING.value,
+                                petId = ""
+                            ))
+                        },
+                        onVetClick = {
+                            backStack.add(Route.CreateActivity(
+                                type = ActivityType.VET.value,
+                                petId = ""
+                            ))
                         }
                     )
                 }
@@ -116,6 +138,9 @@ fun NavHost(
                         petId = route.petId,
                         onNavigateToEdit = {
                             backStack.add(Route.EditPet(route.petId))
+                        },
+                        onCreateActivityClick = {petId ->
+                            backStack.add(Route.CreateActivity(petId = petId, type = ActivityType.WALK.value))
                         }
                     )
                 }
@@ -150,10 +175,23 @@ fun NavHost(
                         onRegisterSuccess = {
                             backStack.clear()
                             backStack.add(NavigationBarRoute.MyPets)
-                        }
+                         }
                     )
                 }
-            }
+                entry<Route.CreateActivity>(
+                ) { route ->
+                        CreateActivityScreen(
+                            petId = route.petId,
+                            type = route.type,
+                            onAddClick = {
+                                backStack.add(Route.AddPet)
+                            },
+                            onSaveActivityClick = {
+                                backStack.removeLastOrNull()
+                            }
+                        )
+                }
+        }
         )
     }
 }
