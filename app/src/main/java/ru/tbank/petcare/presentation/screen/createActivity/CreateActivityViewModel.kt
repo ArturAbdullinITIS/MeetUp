@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.CreateActivityUseCase
-import ru.tbank.petcare.domain.usecase.GetAllPetsUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
-import ru.tbank.petcare.presentation.mapper.toPetCardUiModel
+import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
 import ru.tbank.petcare.presentation.model.GroomingProcedureType
 import ru.tbank.petcare.presentation.model.VetProcedureType
 import ru.tbank.petcare.utils.DateFormatter
@@ -67,7 +67,7 @@ class CreateActivityViewModel @AssistedInject constructor(
     private fun loadPet() {
         viewModelScope.launch {
             getAllPetsUseCase().collect { pets ->
-                val uiPet = pets.map { it.toPetCardUiModel() }
+                val uiPet = pets.map { it.toPetCardUIModel() }
                 _state.update { state ->
                     state.copy(
                         pets = uiPet
