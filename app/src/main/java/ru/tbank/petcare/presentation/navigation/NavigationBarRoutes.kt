@@ -11,6 +11,9 @@ sealed interface Route {
     data class PetProfile(val petId: String) : Route
 
     @Serializable
+    data class PublicPetProfile(val petId: String) : Route
+
+    @Serializable
     data object AddPet : Route
 
     @Serializable
@@ -24,6 +27,10 @@ sealed interface Route {
 
     @Serializable
     data class CreateActivity(val petId: String?, val type: String? = null, val id: String = java.util.UUID.randomUUID().toString()): Route
+    data object Continue : Route
+
+    @Serializable
+    data object Settings : Route
 }
 
 @Serializable
@@ -85,5 +92,8 @@ fun getRouteTitle(route: Route): Int {
         Route.Login -> R.string.login
         Route.Register -> R.string.register
         is Route.CreateActivity -> R.string.create_activity
+        is Route.PublicPetProfile -> R.string.public_pet_profile
+        Route.Continue -> R.string.continue_registration
+        Route.Settings -> R.string.settings
     }
 }

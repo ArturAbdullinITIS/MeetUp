@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.tbank.petcare.domain.usecase.RegisterUseCase
-import ru.tbank.petcare.domain.usecase.SignInWithGoogleUseCase
+import ru.tbank.petcare.domain.usecase.users.RegisterUseCase
+import ru.tbank.petcare.domain.usecase.users.SignInWithGoogleUseCase
 import ru.tbank.petcare.utils.AuthFieldsValidator
 import ru.tbank.petcare.utils.ErrorParser
 import javax.inject.Inject
@@ -24,6 +26,9 @@ class RegistrationViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(RegistrationState())
     val state = _state.asStateFlow()
+
+    private val _events = MutableSharedFlow<RegistrationEvent>()
+    val events = _events.asSharedFlow()
 
     fun processCommand(command: RegistrationCommand) {
         when (command) {
@@ -109,13 +114,12 @@ class RegistrationViewModel @Inject constructor(
             )
 
             if (result.isSuccess) {
-                _state.update { it.copy(isSuccess = true, error = "", isLoading = false) }
+                _state.update { it.copy(error = "", isLoading = false) }
+                _events.emit(RegistrationEvent.EmailRegistered)
             } else {
                 val message = errorParser.getErrorMessage(result.error)
-
                 _state.update {
                     it.copy(
-                        isSuccess = false,
                         isLoading = false,
                         error = message
                     )
@@ -131,11 +135,11 @@ class RegistrationViewModel @Inject constructor(
             val result = signInWithGoogleUseCase(context = context)
 
             if (result.isSuccess) {
-                _state.update { it.copy(isSuccess = true, error = "", isLoading = false) }
+                _state.update { it.copy(error = "", isLoading = false) }
+                _events.emit(RegistrationEvent.GoogleRegistered)
             } else {
                 _state.update {
                     it.copy(
-                        isSuccess = false,
                         error = errorParser.getErrorMessage(result.error),
                         isLoading = false
                     )

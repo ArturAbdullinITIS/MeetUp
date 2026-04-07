@@ -1,5 +1,7 @@
 package ru.tbank.petcare.presentation.mapper
 
+import android.R.attr.name
+import android.R.attr.subtitle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import ru.tbank.petcare.R
@@ -9,13 +11,16 @@ import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.User
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
+import ru.tbank.petcare.presentation.model.PublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.screen.createActivity.ActivityFormState
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityState
+import ru.tbank.petcare.presentation.model.UserForm
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
@@ -111,6 +116,7 @@ fun PetForm.toDomain(): Pet {
 }
 
 fun Pet.toForm(): PetForm {
+    val gameScoreText = "$gameScore pts"
     return PetForm(
         id = id,
         name = name,
@@ -122,11 +128,14 @@ fun Pet.toForm(): PetForm {
         dateOfBirth = dateOfBirth,
         dateOfBirthText = DateFormatter.formatDob(dateOfBirth),
         iconStatus = iconStatus,
-        photoUrl = photoUrl
+        photoUrl = photoUrl,
+        gameScore = gameScore,
+        gameScoreText = gameScoreText,
+        ownerId = ownerId
     )
 }
 
-fun Pet.toPetCardUiModel(): PetCardUIModel {
+fun Pet.toPetCardUIModel(): PetCardUIModel {
     val age = DateFormatter.formatAgeYearsMonths(dateOfBirth)
     val subtitle = listOf(breed, age).filter { it.isNotBlank() }.joinToString(" • ")
 
@@ -163,5 +172,32 @@ fun CreateActivityState.toDomain(): Activity {
             is ActivityFormState.Vet -> ActivityDetails.Vet(vetCost = this.activityType.form.vetCost, procedureType = this.activityType.form.procedureType)
             is ActivityFormState.Walk -> ActivityDetails.Walk(goalKm = this.activityType.form.goalKm, actualKm = this.activityType.form.actualKm )
         }
+    )
+}
+fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
+    val gameScoreField = "$gameScore pts"
+    val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->
+        if (ch.isLowerCase()) ch.titlecase() else ch.toString()
+    }
+    val noteFormatted = note.ifBlank { "No Info" }
+    return PublicPetCardUIModel(
+        id = id,
+        name = name,
+        photoUrl = photoUrl,
+        note = noteFormatted,
+        gameScore = gameScoreField,
+        gender = genderFormatted,
+        breed = breed,
+        isMine = isMine
+    )
+}
+
+fun UserForm.toDomain(): User {
+    return User(
+        id = id,
+        firstName = firstName,
+        lastName = lastName,
+        email = email,
+        photoUrl = photoUrl
     )
 }

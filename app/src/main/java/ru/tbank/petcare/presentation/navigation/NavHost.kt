@@ -9,8 +9,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -20,13 +25,16 @@ import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
+import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
+import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
+import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +47,14 @@ fun NavHost(
     val currentRoute = backStack.lastOrNull() ?: Route.Register
 
     val isBottomBar = currentRoute is NavigationBarRoute
+
+    val topBarActions = remember {
+        mutableStateOf<(@Composable () -> Unit)?>(null)
+    }
+
+    LaunchedEffect(currentRoute) {
+        topBarActions.value = null
+    }
 
     Scaffold(
         topBar = {
@@ -64,7 +80,10 @@ fun NavHost(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
-                )
+                ),
+                actions = {
+                    topBarActions.value?.invoke()
+                }
             )
         },
         floatingActionButton = {
@@ -124,7 +143,12 @@ fun NavHost(
                     )
                 }
                 entry<NavigationBarRoute.Public> {
-                    PublicProfilesScreen()
+                    PublicProfilesScreen(
+                        onPetClick = { petId ->
+                            backStack.add(Route.PublicPetProfile(petId))
+                        },
+                        setTopBarActions = { topBarActions.value = it }
+                    )
                 }
                 entry<Route.AddPet> {
                     AddPetScreen(
@@ -172,7 +196,10 @@ fun NavHost(
                         onNavigateToLogin = {
                             backStack.add(Route.Login)
                         },
-                        onRegisterSuccess = {
+                        onEmailRegisterSuccess = {
+                            backStack.add(Route.Continue)
+                        },
+                        onGoogleRegisterSuccess = {
                             backStack.clear()
                             backStack.add(NavigationBarRoute.MyPets)
                          }
@@ -192,6 +219,22 @@ fun NavHost(
                         )
                 }
         }
+                entry<Route.PublicPetProfile> { route ->
+                    PublicPetProfileScreen(
+                        petId = route.petId
+                    )
+                }
+                entry<Route.Continue> {
+                    ContinueRegistrationScreen(
+                        onContinue = {
+                            backStack.add(NavigationBarRoute.MyPets)
+                        }
+                    )
+                }
+                entry<Route.Settings> {
+                    SettingsScreen()
+                }
+            }
         )
     }
 }

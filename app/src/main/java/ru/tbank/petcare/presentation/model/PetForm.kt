@@ -15,5 +15,9 @@ data class PetForm(
     val dateOfBirth: Date? = null,
     val dateOfBirthText: String = "",
     val iconStatus: IconStatus = IconStatus.NONE,
-    val photoUrl: String = ""
+    val photoUrl: String = "",
+    val gameScore: Int = 0,
+    val ownerId: String = "",
+    val ownerName: String = "",
+    val gameScoreText: String = ""
 )
