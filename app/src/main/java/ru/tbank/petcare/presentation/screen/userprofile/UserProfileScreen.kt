@@ -43,7 +43,7 @@ fun UserProfileScreen(
 ) {
 
     UserProfileContent(
-        onLogoutSucces = onLogoutSuccess,
+        onLogoutSuccess = onLogoutSuccess,
         setTopBarActions = setTopBarActions,
         onEditIconClick = onEditIconClick,
         onSettingsClick = onSettingsClick,
@@ -98,7 +98,7 @@ fun UserProfileContent(
                     onSettingsClick = onSettingsClick,
                     onLogoutClick = {
                         viewModel.processCommand(UserProfileCommand.Logout)
-                        onLogoutSucces()
+                        onLogoutSuccess()
                     }
                 )
             }
