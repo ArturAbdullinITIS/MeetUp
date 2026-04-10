@@ -10,12 +10,14 @@ import dagger.hilt.components.SingletonComponent
 import ru.tbank.petcare.data.repository.ActivityRepositoryImpl
 import ru.tbank.petcare.data.repository.AuthRepositoryImpl
 import ru.tbank.petcare.data.repository.ConnectivityRepositoryImpl
+import ru.tbank.petcare.data.repository.LocaleRepositoryImpl
 import ru.tbank.petcare.data.repository.PetsRepositoryImpl
 import ru.tbank.petcare.data.repository.SettingsRepositoryImpl
 import ru.tbank.petcare.data.repository.UsersRepositoryImpl
 import ru.tbank.petcare.domain.repository.ActivityRepository
 import ru.tbank.petcare.domain.repository.AuthRepository
 import ru.tbank.petcare.domain.repository.ConnectivityRepository
+import ru.tbank.petcare.domain.repository.LocaleRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
 import ru.tbank.petcare.domain.repository.SettingsRepository
 import ru.tbank.petcare.domain.repository.UsersRepository
@@ -69,6 +71,12 @@ interface CoreModule {
     fun bindConnectivityRepository(
         impl: ConnectivityRepositoryImpl
     ): ConnectivityRepository
+
+    @Binds
+    @Singleton
+    fun bindLocaleRepository(
+        impl: LocaleRepositoryImpl
+    ): LocaleRepository
 
     companion object {
 
