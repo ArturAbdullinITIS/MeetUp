@@ -35,16 +35,18 @@ import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
 @Composable
 fun CustomBottomNavBar(
+    modifier: Modifier = Modifier,
     currentRoute: Route,
     onSelected: (Route) -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            .windowInsetsPadding(NavigationBarDefaults.windowInsets),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
         shape = RoundedCornerShape(40.dp),
-
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
         )
     ) {
         Row(
