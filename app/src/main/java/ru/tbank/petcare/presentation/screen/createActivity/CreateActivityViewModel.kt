@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.usecase.CreateActivityUseCase
+import ru.tbank.petcare.domain.usecase.pets.CreateActivityUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
@@ -102,7 +102,7 @@ class CreateActivityViewModel @AssistedInject constructor(
         viewModelScope.launch {
             _state.update { state -> state.copy(isCreating = true) }
             try {
-                val result = createActivityUseCase(activity)
+                val result = createActivityUseCase(state.value.selectedPetId, activity)
                 if (result.isSuccess) {
                     _events.emit(CreateActivityEvent.Saved)
                     _state.update { currentState ->

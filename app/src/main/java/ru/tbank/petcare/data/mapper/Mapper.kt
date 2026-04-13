@@ -84,7 +84,9 @@ fun Activity.toDto(): ActivityDto {
             is ActivityDetails.Grooming -> details.toMap()
             is ActivityDetails.Vet -> details.toMap()
             else -> emptyMap()
-        }
+        },
+        petId = petId,
+        ownerId = ownerId
     )
 }
 

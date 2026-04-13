@@ -1,7 +1,5 @@
 package ru.tbank.petcare.presentation.mapper
 
-import android.R.attr.name
-import android.R.attr.subtitle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import ru.tbank.petcare.R
@@ -12,6 +10,7 @@ import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.User
+import ru.tbank.petcare.presentation.model.ActivityHistoryModel
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
@@ -218,5 +217,49 @@ fun User.toUserForm(): UserForm {
         lastName = this.lastName,
         email = this.email,
         photoUrl = this.photoUrl
+    )
+}
+
+@Composable
+fun Activity.toUIModel(): ActivityHistoryModel {
+    val bgColor = when (activityType) {
+        ActivityType.WALK -> MaterialTheme.colorScheme.primaryContainer
+        ActivityType.VET -> MaterialTheme.colorScheme.tertiaryContainer
+        ActivityType.GROOMING -> MaterialTheme.colorScheme.secondaryContainer
+    }
+
+    val iconTint = when (activityType) {
+        ActivityType.WALK -> MaterialTheme.colorScheme.onPrimaryContainer
+        ActivityType.VET -> MaterialTheme.colorScheme.onTertiaryContainer
+        ActivityType.GROOMING -> MaterialTheme.colorScheme.onSecondaryContainer
+    }
+
+    val iconVector = when (activityType) {
+        ActivityType.WALK -> WalkQuickActionIcon
+        ActivityType.VET -> VetQuickActionIcon
+        ActivityType.GROOMING -> GroomingQuickActionIcon
+    }
+
+    val trailingText: String = when (details) {
+        is ActivityDetails.Grooming -> {
+            details.procedureType.value
+        }
+        is ActivityDetails.Vet -> {
+            details.procedureType.value
+        }
+        is ActivityDetails.Walk -> {
+            "${details.actualKm} km"
+        }
+    }
+
+    return ActivityHistoryModel(
+        activityType = activityType,
+        activityDate = activityDate,
+        notes = notes,
+        details = details,
+        iconTint = iconTint,
+        bgColor = bgColor,
+        iconVector = iconVector,
+        trailingText = trailingText
     )
 }

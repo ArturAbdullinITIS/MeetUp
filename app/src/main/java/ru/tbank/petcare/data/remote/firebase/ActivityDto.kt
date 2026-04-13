@@ -26,6 +26,14 @@ data class ActivityDto(
 
     @get:PropertyName("details")
     @set:PropertyName("details")
-    var details: Map<String, Any>? = null
+    var details: Map<String, Any>? = null,
+
+    @get:PropertyName("pet_id")
+    @set:PropertyName("pet_id")
+    var petId: String = "",
+
+    @get:PropertyName("owner_id")
+    @set:PropertyName("owner_id")
+    var ownerId: String = ""
 
 )
