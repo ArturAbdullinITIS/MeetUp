@@ -1,24 +1,22 @@
 package ru.tbank.petcare.data.repository
 
-import android.util.Log.e
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
+import ru.tbank.petcare.data.remote.firebase.ActivityDto
 import ru.tbank.petcare.di.IoDispatcher
 import ru.tbank.petcare.domain.model.Activity
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.ActivityRepository
+import java.util.Date
 import javax.inject.Inject
 
 class ActivityRepositoryImpl @Inject constructor(
@@ -26,10 +24,10 @@ class ActivityRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     @IoDispatcher private val dispatcherIO: CoroutineDispatcher
 ) : ActivityRepository {
+
     private companion object {
         const val COLLECTION_PATH = "activities"
-        const val FIELD_PET_ID = "petId"
-        const val FIELD_OWNER_ID = "owner_id"
+        const val FIELD_PET_ID = "pet_id"
         const val FIELD_DATE = "date"
     }
 
@@ -47,105 +45,150 @@ class ActivityRepositoryImpl @Inject constructor(
                 )
             }
 
-            val activityToSave = activity.copy(petId = petId, ownerId = currentUserId)
+            val activityToSave = activity.copy(
+                petId = petId,
+                ownerId = currentUserId
+            )
+
             val docRef = collection.add(activityToSave.toDto()).await()
             val activityId = docRef.id
 
-            val savedActivity = activityToSave.copy(id = activityId)
             ValidationResult(
-                data = savedActivity,
+                data = activityToSave.copy(id = activityId),
                 isSuccess = true
             )
         } catch (e: FirebaseFirestoreException) {
             when (e.code) {
-                FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                FirebaseFirestoreException.Code.PERMISSION_DENIED,
+                FirebaseFirestoreException.Code.UNAVAILABLE -> {
                     ValidationResult(
                         error = ErrorType.NetworkError(e.message ?: "")
                     )
+                }
 
-                FirebaseFirestoreException.Code.UNAVAILABLE ->
+                else -> {
                     ValidationResult(
-                        error = ErrorType.NetworkError(e.message ?: "")
+                        error = ErrorType.CommonError(e.message ?: "")
                     )
-
-                else -> ValidationResult(
-                    error = ErrorType.NetworkError(e.message ?: "")
-                )
+                }
             }
-        } catch (e: FirebaseFirestoreException) {
-            ValidationResult(
-                error = ErrorType.CommonError(e.message ?: "")
-            )
         }
     }
 
-    override fun getActivitiesByPetId(petId: String): Flow<List<Activity>> =
-        callbackFlow {
-            val listener = collection.whereEqualTo(FIELD_PET_ID, petId)
-                .addSnapshotListener { snapshot, error ->
-                    if (error != null) {
-                        return@addSnapshotListener
-                    }
-                    if (snapshot != null) {
-                        val activities = snapshot.documents.mapNotNull { doc ->
-                            doc.toObject(Activity::class.java)?.copy(id = doc.id)
-                        }
-                        trySend(activities)
-                    }
-                }
-            awaitClose { listener.remove() }
-        }.flowOn(dispatcherIO)
-            .catch { e ->
-                emit(emptyList())
+    override suspend fun getActivitiesByPetId(
+        petId: String
+    ): ValidationResult<List<Activity>> = withContext(dispatcherIO) {
+        try {
+            val snapshot = collection
+                .whereEqualTo(FIELD_PET_ID, petId)
+                .orderBy(FIELD_DATE, Query.Direction.DESCENDING)
+                .get()
+                .await()
+
+            val activities = snapshot.documents.mapNotNull { doc ->
+                doc.toObject(ActivityDto::class.java)?.toDomain()
             }
 
-    override fun getLastActivitiesByPetId(
+            ValidationResult(
+                data = activities,
+                isSuccess = true
+            )
+        } catch (e: FirebaseFirestoreException) {
+            when (e.code) {
+                FirebaseFirestoreException.Code.PERMISSION_DENIED,
+                FirebaseFirestoreException.Code.UNAVAILABLE -> {
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
+                }
+
+                else -> {
+                    ValidationResult(
+                        error = ErrorType.CommonError(e.message ?: "")
+                    )
+                }
+            }
+        }
+    }
+
+    override suspend fun getLastActivitiesByPetId(
         petId: String,
         limit: Int
-    ): Flow<List<Activity>> = callbackFlow {
-        val listener = collection.whereEqualTo(FIELD_PET_ID, petId)
-            .orderBy(FIELD_DATE, Query.Direction.DESCENDING)
-            .limit(limit.toLong())
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    return@addSnapshotListener
+    ): ValidationResult<List<Activity>> = withContext(dispatcherIO) {
+        try {
+            val snapshot = collection
+                .whereEqualTo(FIELD_PET_ID, petId)
+                .orderBy(FIELD_DATE, Query.Direction.DESCENDING)
+                .limit(limit.toLong())
+                .get()
+                .await()
+
+            val activities = snapshot.documents.mapNotNull { doc ->
+                doc.toObject(ActivityDto::class.java)?.toDomain()
+            }
+
+            ValidationResult(
+                data = activities,
+                isSuccess = true
+            )
+        } catch (e: FirebaseFirestoreException) {
+            when (e.code) {
+                FirebaseFirestoreException.Code.PERMISSION_DENIED,
+                FirebaseFirestoreException.Code.UNAVAILABLE -> {
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
                 }
-                if (snapshot != null) {
-                    val activities = snapshot.documents.mapNotNull { doc ->
-                        doc.toObject(Activity::class.java)?.copy(id = doc.id)
-                    }
-                    trySend(activities)
+
+                else -> {
+                    ValidationResult(
+                        error = ErrorType.CommonError(e.message ?: "")
+                    )
                 }
             }
-        awaitClose { listener.remove() }
-    }.flowOn(dispatcherIO)
-        .catch { e ->
-            emit(emptyList())
         }
+    }
 
-    override fun getActivitiesByPeriod(
+    override suspend fun getActivitiesByPeriod(
         petId: String,
         startDate: Long,
         endDate: Long
-    ): Flow<List<Activity>> = callbackFlow {
-        val listener = collection.whereEqualTo(FIELD_PET_ID, petId)
-            .whereGreaterThanOrEqualTo(FIELD_DATE, startDate)
-            .whereLessThanOrEqualTo(FIELD_DATE, endDate)
-            .orderBy(FIELD_DATE)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    return@addSnapshotListener
+    ): ValidationResult<List<Activity>> = withContext(dispatcherIO) {
+        try {
+            val startTimestamp = Timestamp(Date(startDate))
+            val endTimestamp = Timestamp(Date(endDate))
+
+            val snapshot = collection
+                .whereEqualTo(FIELD_PET_ID, petId)
+                .whereGreaterThanOrEqualTo(FIELD_DATE, startTimestamp)
+                .whereLessThanOrEqualTo(FIELD_DATE, endTimestamp)
+                .orderBy(FIELD_DATE, Query.Direction.ASCENDING)
+                .get()
+                .await()
+
+            val activities = snapshot.documents.mapNotNull { doc ->
+                doc.toObject(ActivityDto::class.java)?.toDomain()
+            }
+
+            ValidationResult(
+                data = activities,
+                isSuccess = true
+            )
+        } catch (e: FirebaseFirestoreException) {
+            when (e.code) {
+                FirebaseFirestoreException.Code.PERMISSION_DENIED,
+                FirebaseFirestoreException.Code.UNAVAILABLE -> {
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
                 }
-                if (snapshot != null) {
-                    val activities = snapshot.documents.mapNotNull { doc ->
-                        doc.toObject(Activity::class.java)?.copy(id = doc.id)
-                    }
-                    trySend(activities)
+
+                else -> {
+                    ValidationResult(
+                        error = ErrorType.CommonError(e.message ?: "")
+                    )
                 }
             }
-        awaitClose { listener.remove() }
-    }.flowOn(dispatcherIO)
-        .catch { e ->
-            emit(emptyList())
         }
+    }
 }

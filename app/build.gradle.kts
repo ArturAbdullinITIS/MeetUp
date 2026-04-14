@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.detekt)
+    id("kotlin-parcelize")
 
 }
 
@@ -120,6 +121,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Charts
+    implementation(libs.charty)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.compose.shimmer)

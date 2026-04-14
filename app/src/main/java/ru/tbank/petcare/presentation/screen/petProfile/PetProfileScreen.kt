@@ -33,15 +33,23 @@ import ru.tbank.petcare.presentation.common.NotesCard
 fun PetProfileScreen(
     onCreateActivityClick: (String) -> Unit,
     petId: String,
-    onNavigateToEdit: (String) -> Unit
+    onNavigateToEdit: (String) -> Unit,
+    onNavigateToAnalytics: (String) -> Unit
 ) {
-    PetProfileContent(onCreateActivityClick = onCreateActivityClick, petId = petId, onNavigateToEdit = onNavigateToEdit)
+    PetProfileContent(
+        onCreateActivityClick = onCreateActivityClick,
+        petId = petId,
+        onNavigateToEdit = onNavigateToEdit,
+        onNavigateToAnalytics = onNavigateToAnalytics
+    )
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun PetProfileContent(
     onNavigateToEdit: (String) -> Unit,
     onCreateActivityClick: (String) -> Unit,
+    onNavigateToAnalytics: (String) -> Unit,
     petId: String,
     modifier: Modifier = Modifier,
     viewModel: PetProfileViewModel = hiltViewModel(
@@ -118,7 +126,9 @@ private fun PetProfileContent(
                 icon = Icons.Default.Analytics,
                 bg = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
                 fg = MaterialTheme.colorScheme.onSecondaryContainer,
-                onClick = {}
+                onClick = {
+                    onNavigateToAnalytics(petId)
+                }
             )
         }
     }

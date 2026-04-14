@@ -181,4 +181,23 @@
     <string name="no_internet_please_check_your_connection_and_try_again">Проверьте подключение и попробуйте снова.</string>
     <string name="no_internet_icon">Иконка отсутствия интернета</string>
     <string name="no_internet_connection">Нет подключения к интернету</string>
+    <string name="delete_your_account">Удалить аккаунт?</string>
+    <string name="failed_to_delete">Не удалось удалить</string>
+    <string name="activity_history_icon">Иконка истории активности</string>
+    <string name="stat_card_icon">Иконка карточки статистики</string>
+    <string name="total_walks">Всего прогулок</string>
+    <string name="total_walks_icon">Иконка всех прогулок</string>
+    <string name="avg_km">Км (Ср.)</string>
+    <string name="total_expenses">Общие затраты</string>
+    <string name="activity_history">История Активностей</string>
+    <string name="view_all">Просмотреть все</string>
+    <string name="distance">Расстояние</string>
+    <string name="walked_distance">Пройденное расстояние</string>
+    <string name="expenses">Затраты</string>
+    <string name="service_costs">Стоимость услуг</string>
+    <string name="no_data_yet">Нет информации</string>
+    <string name="goals">Цели</string>
+    <string name="completed_of_the_distance_goals">%1$s достиг %2$d%% из всех целей.</string>
+    <string name="goal_completion">Прогресс по целям</string>
+    <string name="logout">Выйти</string>
 </resources>

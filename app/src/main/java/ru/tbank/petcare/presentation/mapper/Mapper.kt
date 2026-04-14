@@ -6,6 +6,7 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Activity
 import ru.tbank.petcare.domain.model.ActivityDetails
 import ru.tbank.petcare.domain.model.ActivityType
+import ru.tbank.petcare.domain.model.AnalyticsPeriod
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
@@ -262,4 +263,13 @@ fun Activity.toUIModel(): ActivityHistoryModel {
         iconVector = iconVector,
         trailingText = trailingText
     )
+}
+
+fun AnalyticsPeriod.toUiText(): String {
+    return when (this) {
+        AnalyticsPeriod.WEEK -> "Week"
+        AnalyticsPeriod.MONTH -> "Month"
+        AnalyticsPeriod.THREE_MONTHS -> "3M"
+        AnalyticsPeriod.YEAR -> "Year"
+    }
 }

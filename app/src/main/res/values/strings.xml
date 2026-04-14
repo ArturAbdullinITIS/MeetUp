@@ -192,4 +192,18 @@
     <string name="failed_to_delete">Failed to delete</string>
     <string name="activity_history_icon">Activity History Icon</string>
     <string name="stat_card_icon">Stat Card Icon</string>
+    <string name="total_walks">Total walks</string>
+    <string name="total_walks_icon">Total walks icon</string>
+    <string name="avg_km">Avg. km</string>
+    <string name="total_expenses">Total expenses</string>
+    <string name="activity_history">Activity History</string>
+    <string name="view_all">View All</string>
+    <string name="distance">Distance</string>
+    <string name="walked_distance">Walked distance</string>
+    <string name="expenses">Expenses</string>
+    <string name="service_costs">Service costs</string>
+    <string name="no_data_yet">No data yet</string>
+    <string name="goals">GOALS</string>
+    <string name="completed_of_the_distance_goals">%1$s completed %2$d%% of the distance goals.</string>
+    <string name="goal_completion">Goal Completion</string>
 </resources>
