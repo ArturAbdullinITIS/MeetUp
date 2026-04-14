@@ -1,11 +1,9 @@
-pre-push:
-  parallel: false
-  commands:
-    detekt:
-      run: ./gradlew :app:detekt
-
 pre-commit:
-  parallel: false
+  commands:
+    lint:
+      run: ./gradlew lint
+
+pre-push:
   commands:
     detekt:
       run: ./gradlew :app:detekt
