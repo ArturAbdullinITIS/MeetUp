@@ -9,12 +9,15 @@ import ru.tbank.petcare.data.remote.firebase.UserDto
 import ru.tbank.petcare.data.remote.network.animals.AnimalsResponseDto
 import ru.tbank.petcare.domain.model.Activity
 import ru.tbank.petcare.domain.model.ActivityDetails
+import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.User
+import ru.tbank.petcare.presentation.model.GroomingProcedureType
+import ru.tbank.petcare.presentation.model.VetProcedureType
 import java.util.Date
 
 fun PetDto.toDomain(): Pet {
@@ -84,7 +87,9 @@ fun Activity.toDto(): ActivityDto {
             is ActivityDetails.Grooming -> details.toMap()
             is ActivityDetails.Vet -> details.toMap()
             else -> emptyMap()
-        }
+        },
+        petId = petId,
+        ownerId = ownerId
     )
 }
 
@@ -160,3 +165,54 @@ fun PetDbModel.toDomain(): Pet = Pet(
     iconStatus = IconStatus.getIconStatusFromValue(iconStatus),
     photoUrl = photoUrl
 )
+
+fun ActivityDto.toDomain(): Activity {
+    val activityType = ActivityType.entries.firstOrNull { it.name == type } ?: ActivityType.WALK
+
+    return Activity(
+        id = id,
+        activityType = activityType,
+        activityDate = date?.toDate(),
+        notes = notes,
+        details = details.toActivityDetails(activityType),
+        isReminder = isReminder,
+        petId = petId,
+        ownerId = ownerId
+    )
+}
+
+private fun Map<String, Any>?.toActivityDetails(activityType: ActivityType): ActivityDetails {
+    val safeMap = this.orEmpty()
+
+    return when (activityType) {
+        ActivityType.WALK -> {
+            ActivityDetails.Walk(
+                goalKm = (safeMap["goal"] as? Number)?.toDouble()?.toString() ?: "0",
+                actualKm = (safeMap["actual"] as? Number)?.toDouble()?.toString() ?: "0"
+            )
+        }
+
+        ActivityType.GROOMING -> {
+            ActivityDetails.Grooming(
+                procedureType = safeMap["procedure_type"]?.toString()
+                    ?.let { value ->
+                        runCatching { GroomingProcedureType.valueOf(value) }.getOrNull()
+                    }
+                    ?: GroomingProcedureType.FULL_SERVICE,
+                groomingCost = (safeMap["cost"] as? Number)?.toDouble()?.toString() ?: "0",
+                durationMinutes = (safeMap["duration_minutes"] as? Number)?.toInt()?.toString() ?: "0"
+            )
+        }
+
+        ActivityType.VET -> {
+            ActivityDetails.Vet(
+                procedureType = safeMap["procedure_type"]?.toString()
+                    ?.let { value ->
+                        runCatching { VetProcedureType.valueOf(value) }.getOrNull()
+                    }
+                    ?: VetProcedureType.CHECKUP,
+                vetCost = (safeMap["cost"] as? Number)?.toDouble()?.toString() ?: "0"
+            )
+        }
+    }
+}

@@ -190,11 +190,20 @@
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="delete_your_account">Delete your account?</string>
     <string name="failed_to_delete">Failed to delete</string>
-    <string name="cost">Cost</string>
-    <string name="grooming_reminder">Grooming reminder</string>
-    <string name="walk_reminder">Walk reminder</string>
-    <string name="vet_reminder">Vet reminder</string>
-    <string name="grooming_session_for_is_coming">Grooming session for %1$s is coming!</string>
-    <string name="vet_visit_for_is_coming">Vet visit for %1$s is coming!</string>
-    <string name="don_t_forget_to_walk">Don\'t forget to walk %1$s</string>
+    <string name="activity_history_icon">Activity History Icon</string>
+    <string name="stat_card_icon">Stat Card Icon</string>
+    <string name="total_walks">Total walks</string>
+    <string name="total_walks_icon">Total walks icon</string>
+    <string name="avg_km">Avg. km</string>
+    <string name="total_expenses">Total expenses</string>
+    <string name="activity_history">Activity History</string>
+    <string name="view_all">View All</string>
+    <string name="distance">Distance</string>
+    <string name="walked_distance">Walked distance</string>
+    <string name="expenses">Expenses</string>
+    <string name="service_costs">Service costs</string>
+    <string name="no_data_yet">No data yet</string>
+    <string name="goals">GOALS</string>
+    <string name="completed_of_the_distance_goals">%1$s completed %2$d%% of the distance goals.</string>
+    <string name="goal_completion">Goal Completion</string>
 </resources>

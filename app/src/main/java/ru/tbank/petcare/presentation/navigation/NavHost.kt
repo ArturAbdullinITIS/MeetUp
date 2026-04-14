@@ -31,6 +31,7 @@ import ru.tbank.petcare.presentation.common.NoInternetBanner
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.root.StartDestination
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
+import ru.tbank.petcare.presentation.screen.analytics.AnalyticsScreen
 import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
@@ -189,6 +190,9 @@ fun NavHost(
                                         type = ActivityType.WALK.value
                                     )
                                 )
+                            },
+                            onNavigateToAnalytics = { petId ->
+                                backStack.add(Route.Analytics(petId))
                             }
                         )
                     }
@@ -283,6 +287,11 @@ fun NavHost(
                             onContinue = {
                                 backStack.removeLastOrNull()
                             }
+                        )
+                    }
+                    entry<Route.Analytics> { route ->
+                        AnalyticsScreen(
+                            petId = route.petId
                         )
                     }
                 }

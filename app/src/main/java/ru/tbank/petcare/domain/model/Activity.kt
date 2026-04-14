@@ -11,6 +11,8 @@ data class Activity(
     val notes: String = "",
     val details: ActivityDetails = ActivityDetails.Walk(),
     val isReminder: Boolean = false,
+    val petId: String = "",
+    val ownerId: String = ""
 )
 
 enum class ActivityType(val value: String) {

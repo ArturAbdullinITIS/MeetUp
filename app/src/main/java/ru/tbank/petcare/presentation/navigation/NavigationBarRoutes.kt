@@ -1,31 +1,32 @@
 package ru.tbank.petcare.presentation.navigation
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 import ru.tbank.petcare.R
 
-@Serializable
-sealed interface Route {
-    @Serializable
+@Parcelize
+sealed interface Route : Parcelable {
+    @Parcelize
     data class PetProfile(val petId: String) : Route
 
-    @Serializable
+    @Parcelize
     data class PublicPetProfile(val petId: String) : Route
 
-    @Serializable
+    @Parcelize
     data object AddPet : Route
 
-    @Serializable
+    @Parcelize
     data class EditPet(val petId: String) : Route
 
-    @Serializable
+    @Parcelize
     data object Login : Route
 
-    @Serializable
+    @Parcelize
     data object Register : Route
 
-    @Serializable
+    @Parcelize
     data class CreateActivity(
         val petId: String?,
         val type: String? = null,
@@ -33,25 +34,30 @@ sealed interface Route {
     ) : Route
     data object Continue : Route
 
-    @Serializable
+    @Parcelize
     data object Settings : Route
 
-    @Serializable
+    @Parcelize
     data object EditProfile : Route
+
+    @Parcelize
+    data class Analytics(
+        val petId: String
+    ) : Route
 }
 
-@Serializable
+@Parcelize
 sealed interface NavigationBarRoute : Route {
-    @Serializable
+    @Parcelize
     data object MyPets : NavigationBarRoute
 
-    @Serializable
+    @Parcelize
     data object Public : NavigationBarRoute
 
-    @Serializable
+    @Parcelize
     data object PetRunner : NavigationBarRoute
 
-    @Serializable
+    @Parcelize
     data object Profile : NavigationBarRoute
 }
 
@@ -104,5 +110,6 @@ fun getRouteTitle(route: Route): Int {
         Route.Continue -> R.string.continue_registration
         Route.Settings -> R.string.settings
         Route.EditProfile -> R.string.edit_profile
+        is Route.Analytics -> R.string.analytics
     }
 }
