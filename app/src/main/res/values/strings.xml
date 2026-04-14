@@ -219,4 +219,6 @@
     <string name="high_score">High score: %1$s</string>
     <string name="restart">Restart</string>
     <string name="high">HIGH %1$s</string>
+    <string name="last_activity_icon">Last Activity Icon</string>
+    <string name="recent_activities">Recent Activities</string>
 </resources>
