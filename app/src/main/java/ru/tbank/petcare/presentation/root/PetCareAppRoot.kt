@@ -20,7 +20,6 @@ fun PetCareAppRoot(
         PetCareTheme(darkTheme = settings.darkTheme) {
             NavHost(
                 startDestination = startDestination!!,
-                onFinishOnBoarding = splashViewModel::finishOnboarding
             )
         }
     }

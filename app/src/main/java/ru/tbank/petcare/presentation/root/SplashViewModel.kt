@@ -41,8 +41,11 @@ class SplashViewModel @Inject constructor(
 
             val result = getCurrentUserIdUseCase()
             _startDestination.update {
-                if (result.isSuccess) StartDestination.Main
-                else StartDestination.Auth
+                if (result.isSuccess) {
+                    StartDestination.Main
+                } else {
+                    StartDestination.Auth
+                }
             }
         }
     }
@@ -52,8 +55,11 @@ class SplashViewModel @Inject constructor(
             onboardingPreferencesDataSource.setOnBoardingShown()
             val result = getCurrentUserIdUseCase()
             _startDestination.update {
-                if (result.isSuccess) StartDestination.Main
-                else StartDestination.Auth
+                if (result.isSuccess) {
+                    StartDestination.Main
+                } else {
+                    StartDestination.Auth
+                }
             }
         }
     }

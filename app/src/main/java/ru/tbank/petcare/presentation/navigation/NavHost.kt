@@ -47,13 +47,12 @@ import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
 import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavHost(
     modifier: Modifier = Modifier,
-    startDestination: StartDestination,
-    onFinishOnBoarding: () -> Unit
+    startDestination: StartDestination
 ) {
     val navHostViewModel: NavHostViewModel = hiltViewModel()
     val isOnline by navHostViewModel.isOnline.collectAsState()
