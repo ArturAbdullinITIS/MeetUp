@@ -20,9 +20,9 @@ class OnBoardingPreferencesDataSource @Inject constructor(
             prefs[ON_BOARDING_KEY] ?: false
         }
 
-    suspend fun setOnBoardingShown() {
+    suspend fun setOnBoardingShown(value: Boolean) {
         dataStore.edit { prefs ->
-            prefs[ON_BOARDING_KEY] = true
+            prefs[ON_BOARDING_KEY] = value
         }
     }
 }

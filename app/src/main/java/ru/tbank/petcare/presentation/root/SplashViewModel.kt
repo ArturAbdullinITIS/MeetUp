@@ -49,18 +49,4 @@ class SplashViewModel @Inject constructor(
             }
         }
     }
-
-    fun finishOnboarding() {
-        viewModelScope.launch {
-            onboardingPreferencesDataSource.setOnBoardingShown()
-            val result = getCurrentUserIdUseCase()
-            _startDestination.update {
-                if (result.isSuccess) {
-                    StartDestination.Main
-                } else {
-                    StartDestination.Auth
-                }
-            }
-        }
-    }
 }

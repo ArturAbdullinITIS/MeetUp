@@ -43,12 +43,14 @@ import ru.tbank.petcare.presentation.common.PetCareHeader
 fun RegistrationScreen(
     onNavigateToLogin: () -> Unit,
     onEmailRegisterSuccess: () -> Unit,
-    onGoogleRegisterSuccess: () -> Unit
+    onGoogleRegisterSuccess: () -> Unit,
+    onNavigateToOnboarding: () -> Unit
 ) {
     RegistrationContent(
         onNavigateToLogin = onNavigateToLogin,
         onEmailRegisterSuccess = onEmailRegisterSuccess,
-        onGoogleRegisterSuccess = onGoogleRegisterSuccess
+        onGoogleRegisterSuccess = onGoogleRegisterSuccess,
+        onNavigateToOnboarding = onNavigateToOnboarding
     )
 }
 
@@ -57,6 +59,7 @@ fun RegistrationContent(
     onNavigateToLogin: () -> Unit,
     onEmailRegisterSuccess: () -> Unit,
     onGoogleRegisterSuccess: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
@@ -74,6 +77,10 @@ fun RegistrationContent(
                 RegistrationEvent.GoogleRegistered -> {
                     onGoogleRegisterSuccess()
                 }
+
+                RegistrationEvent.ShowOnboarding -> {
+                    onNavigateToOnboarding()
+                }
             }
         }
     }
@@ -86,7 +93,11 @@ fun RegistrationContent(
         horizontalAlignment = Alignment.CenterHorizontally,
 
     ) {
-        PetCareHeader()
+        PetCareHeader(
+            onHelpClick = {
+                viewModel.processCommand(RegistrationCommand.CheckOnboarding)
+            }
+        )
 
         Spacer(modifier = Modifier.height(40.dp))
 
