@@ -54,7 +54,6 @@ sealed interface Route : Parcelable {
     data object Onboarding : Route
 }
 
-
 @Parcelize
 sealed interface NavigationBarRoute : Route {
     @Parcelize
