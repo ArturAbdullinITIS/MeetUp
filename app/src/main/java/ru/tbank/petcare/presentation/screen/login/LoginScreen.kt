@@ -163,7 +163,7 @@ fun LoginContent(
                     )
                 },
                 text = stringResource(R.string.login),
-                enabled = true
+                enabled = !state.isLoading && !state.isGoogleLoading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -173,8 +173,9 @@ fun LoginContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             GoogleButton(
-                isLoading = state.isLoading,
-                onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) }
+                isLoading = state.isGoogleLoading,
+                onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) },
+                enabled = !state.isLoading && !state.isGoogleLoading
             )
 
             Spacer(modifier = Modifier.height(24.dp))
