@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -163,7 +164,9 @@ fun CustomButton(
             Text(
                 text = text,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
@@ -312,7 +315,9 @@ fun LabelText(
         fontWeight = FontWeight.SemiBold,
         fontSize = 11.sp,
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-        letterSpacing = 1.1.sp
+        letterSpacing = 1.1.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
     )
 }
 

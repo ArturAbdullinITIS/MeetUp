@@ -275,12 +275,12 @@ fun Activity.toUIModel(): ActivityHistoryModel {
     )
 }
 
-fun AnalyticsPeriod.toUiText(): String {
+fun AnalyticsPeriod.toUiText(): Int {
     return when (this) {
-        AnalyticsPeriod.WEEK -> "Week"
-        AnalyticsPeriod.MONTH -> "Month"
-        AnalyticsPeriod.THREE_MONTHS -> "3M"
-        AnalyticsPeriod.YEAR -> "Year"
+        AnalyticsPeriod.WEEK -> R.string.week
+        AnalyticsPeriod.MONTH -> R.string.month
+        AnalyticsPeriod.THREE_MONTHS -> R.string._3m
+        AnalyticsPeriod.YEAR -> R.string.year
     }
 }
 

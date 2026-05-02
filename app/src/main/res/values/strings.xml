@@ -246,6 +246,11 @@
     <string name="play"><![CDATA[Play &]]></string>
     <string name="connect">Connect</string>
     <string name="birthday_icon">Birthday Icon</string>
+    <string name="all">All</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="_3m">3M</string>
+    <string name="year">Year</string>
     <string name="you_dont_have_any_pets">You don\'t have any pets</string>
     <string name="create_a_pet">Create a pet before you play</string>
 </resources>
