@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetLastActivitiesUseCase
+import ru.tbank.petcare.presentation.model.ActivityHistoryFilterOption
 
 @HiltViewModel(assistedFactory = AllRecentActivitiesViewModel.Factory::class)
 class AllRecentActivitiesViewModel @AssistedInject constructor(
@@ -53,6 +54,14 @@ class AllRecentActivitiesViewModel @AssistedInject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun changeFilterOption(option: ActivityHistoryFilterOption) {
+        _state.update { state ->
+            state.copy(
+                filterOption = option
+            )
         }
     }
 

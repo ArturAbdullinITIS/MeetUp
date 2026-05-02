@@ -190,7 +190,9 @@ fun PetProfileButton(
                 text = text,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = fg
+                color = fg,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

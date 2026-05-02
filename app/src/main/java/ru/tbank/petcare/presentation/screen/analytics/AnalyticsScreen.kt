@@ -110,11 +110,14 @@ private fun AnalyticsContent(
             value = state.summary.totalExpenses.toString(),
             bgColor = MaterialTheme.colorScheme.tertiaryContainer
         )
-        ActivityHistoryTitle(
-            onViewAllClick = {
-                onNavigateToRecent(petId)
-            }
-        )
+
+        if (state.lastActivities.isNotEmpty()) {
+            ActivityHistoryTitle(
+                onViewAllClick = {
+                    onNavigateToRecent(petId)
+                }
+            )
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

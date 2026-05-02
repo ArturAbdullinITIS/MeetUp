@@ -270,7 +270,7 @@ fun AnalyticsPeriodSegmentedControl(
                     )
                 ) {
                     Text(
-                        text = period.toUiText(),
+                        text = stringResource(period.toUiText()),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,

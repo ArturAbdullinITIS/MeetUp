@@ -1,6 +1,7 @@
 package ru.tbank.petcare.presentation.screen.allRecentActivities
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,16 +37,24 @@ private fun AllRecentActivitiesContent(
     )
 ) {
     val state by viewModel.state.collectAsState()
-
-    LazyColumn(
-        modifier = modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    Column(
+        modifier = modifier.fillMaxSize().padding(16.dp)
     ) {
-        items(state.activities) { activity ->
-            ActivityHistoryCard(
-                model = activity.toUIModel()
-            )
+        FilterRow(
+            selectedChip = state.filterOption,
+            onSelectChip = { option ->
+                viewModel.changeFilterOption(option)
+            }
+        )
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(state.filteredActivities) { activity ->
+                ActivityHistoryCard(
+                    model = activity.toUIModel()
+                )
+            }
         }
     }
 }
