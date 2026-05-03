@@ -10,6 +10,7 @@ import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -143,6 +144,9 @@ class AuthRepositoryImpl @Inject constructor(
                 else ->
                     ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(errorMessage))
             }
+        } catch (e: FirebaseException) {
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
+            ValidationResult(isSuccess = false, error = ErrorType.NetworkError(errorMessage))
         }
     }
 
@@ -165,6 +169,9 @@ class AuthRepositoryImpl @Inject constructor(
                 else ->
                     ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(errorMessage))
             }
+        } catch (e: FirebaseException) {
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
+            ValidationResult(isSuccess = false, error = ErrorType.NetworkError(errorMessage))
         }
     }
 

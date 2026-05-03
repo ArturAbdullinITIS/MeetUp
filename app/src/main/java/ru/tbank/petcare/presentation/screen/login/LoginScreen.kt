@@ -35,6 +35,7 @@ import ru.tbank.petcare.presentation.common.AuthTitle
 import ru.tbank.petcare.presentation.common.CustomButton
 import ru.tbank.petcare.presentation.common.CustomDivider
 import ru.tbank.petcare.presentation.common.EmailTextField
+import ru.tbank.petcare.presentation.common.ErrorText
 import ru.tbank.petcare.presentation.common.GoogleButton
 import ru.tbank.petcare.presentation.common.PasswordTextField
 import ru.tbank.petcare.presentation.common.PetCareHeader
@@ -162,7 +163,11 @@ fun LoginContent(
                 enabled = !state.isLoading && !state.isGoogleLoading
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ErrorText(errorText = state.error)
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             CustomDivider()
 

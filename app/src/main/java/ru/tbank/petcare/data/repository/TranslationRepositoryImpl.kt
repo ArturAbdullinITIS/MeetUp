@@ -1,7 +1,9 @@
 package ru.tbank.petcare.data.repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withTimeoutOrNull
 import ru.tbank.petcare.data.remote.network.deepl.DeeplApiService
 import ru.tbank.petcare.domain.model.Language
 import ru.tbank.petcare.domain.repository.TranslationRepository
@@ -23,18 +25,16 @@ class TranslationRepositoryImpl @Inject constructor(
             emit(text)
             return@flow
         }
-
-        try {
-            val response = deeplApiService.translate(
+        val response = withTimeoutOrNull(7000) {
+            deeplApiService.translate(
                 text = text,
                 sourceLang = getDeeplLanguage(sourceLanguage),
                 targetLang = getDeeplLanguage(targetLanguage)
             )
-
-            val translatedText = response.translations.firstOrNull()?.text ?: text
-            emit(translatedText)
-        } catch (_: Exception) {
-            emit(text)
         }
+        val translatedText = response?.translations?.firstOrNull()?.text ?: text
+        emit(translatedText)
+    }.catch {
+        emit(text)
     }
 }
