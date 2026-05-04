@@ -2,6 +2,7 @@ package ru.tbank.petcare.presentation.screen.mypets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import ru.tbank.petcare.domain.usecase.settings.GetAllSettingsUseCase
 import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
 import ru.tbank.petcare.utils.ResourceProvider
 import javax.inject.Inject
-
+@Suppress("LongParameterList")
 @HiltViewModel
 class MyPetsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
@@ -27,17 +28,23 @@ class MyPetsViewModel @Inject constructor(
     private val getAllTipsUseCase: GetAllTipsUseCase,
     private val syncPetsUseCase: SyncPetsUseCase,
     private val getAllSettingsUseCase: GetAllSettingsUseCase,
-    private val isOnlineUseCase: IsOnlineUseCase
+    private val isOnlineUseCase: IsOnlineUseCase,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MyPetsState())
     private var tipsJob: Job? = null
+    private var petsJob: Job? = null
     val state = _state.asStateFlow()
     val isOnline = isOnlineUseCase()
 
     init {
-        loadPets()
-        loadTips()
+        viewModelScope.launch {
+            firebaseAuth.addAuthStateListener {
+                loadPets()
+                loadTips()
+            }
+        }
         viewModelScope.launch {
             getAllSettingsUseCase()
                 .collect { settings ->
@@ -50,8 +57,9 @@ class MyPetsViewModel @Inject constructor(
     }
 
     private fun loadPets() {
-        viewModelScope.launch {
-            _state.update { it.copy(isPetsLoading = true, errorMessage = null) }
+        petsJob?.cancel()
+        petsJob = viewModelScope.launch {
+            _state.update { it.copy(isPetsLoading = true, errorMessage = null, pets = emptyList()) }
 
             getAllPetsUseCase()
                 .catch { exception ->
@@ -78,11 +86,10 @@ class MyPetsViewModel @Inject constructor(
 
     private fun loadTips() {
         tipsJob?.cancel()
-
         tipsJob = viewModelScope.launch {
             _state.update { it.copy(isTipsLoading = true) }
-
-            getAllTipsUseCase(getAllSettingsUseCase().first().language)
+            val currentLanguage = getAllSettingsUseCase().first().language
+            getAllTipsUseCase(currentLanguage)
                 .catch { e ->
                     _state.update {
                         it.copy(

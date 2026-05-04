@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.w3c.dom.Text
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.ui.theme.PlusJakartaSans
 
@@ -139,6 +140,20 @@ fun PasswordTextField(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
         ),
+    )
+}
+
+@Composable
+fun ErrorText(
+    modifier: Modifier = Modifier,
+    errorText: String
+) {
+    Text(
+        modifier = modifier,
+        text = errorText,
+        color = MaterialTheme.colorScheme.error,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Light
     )
 }
 
