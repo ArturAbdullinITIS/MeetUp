@@ -25,7 +25,7 @@ class TranslationRepositoryImpl @Inject constructor(
             emit(text)
             return@flow
         }
-        val response = withTimeoutOrNull(7000) {
+        val response = withTimeoutOrNull(7000L) {
             deeplApiService.translate(
                 text = text,
                 sourceLang = getDeeplLanguage(sourceLanguage),

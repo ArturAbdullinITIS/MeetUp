@@ -220,7 +220,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     private suspend fun translateErrorMessage(errorMessage: String): String {
         val currentLanguage = settingsRepository.getSettings().first().language
-
         return when {
             errorMessage.isBlank() -> errorMessage
             currentLanguage == Language.ENGLISH -> errorMessage
