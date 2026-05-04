@@ -8,11 +8,13 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetLocalPetUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.pets.IsOnlineUseCase
+import ru.tbank.petcare.domain.usecase.settings.GetAllSettingsUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
 
@@ -22,6 +24,7 @@ private const val PET_ID = "pet_id"
 class PetProfileViewModel @AssistedInject constructor(
     private val getPetUseCase: GetLocalPetUseCase,
     private val getPetInfoUseCase: GetPetInfoUseCase,
+    private val getAllSettingsUseCase: GetAllSettingsUseCase,
     private val errorParser: ErrorParser,
     private val isOnlineUseCase: IsOnlineUseCase,
     @Assisted(PET_ID) private val petId: String,
@@ -65,7 +68,7 @@ class PetProfileViewModel @AssistedInject constructor(
                             errorMessage = null
                         )
                     }
-                    val petInfo = getPetInfoUseCase(command.breed)
+                    val petInfo = getPetInfoUseCase(command.breed, getAllSettingsUseCase().first().language)
 
                     if (petInfo.isSuccess && petInfo.data != null) {
                         _state.update { state ->
