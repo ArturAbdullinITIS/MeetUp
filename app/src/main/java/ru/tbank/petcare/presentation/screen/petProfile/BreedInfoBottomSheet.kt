@@ -34,7 +34,8 @@ fun BreedInfoBottomSheet(
     error: String? = null,
     petInfoUIModel: PetInfo? = null,
     onDismiss: () -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
+    isOnline: Boolean = true
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -52,116 +53,124 @@ fun BreedInfoBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            when {
-                isLoading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+            if (isOnline) {
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                }
 
-                error != null -> {
-                    Text(
-                        text = error,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
-
-                petInfoUIModel != null -> {
-                    Text(
-                        text = stringResource(R.string.breed_information).uppercase(),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    Text(
-                        text = petInfoUIModel.breedName,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        letterSpacing = 1.sp
-                    )
-                    Text(
-                        text = "\"${petInfoUIModel.slogan}\"",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        fontStyle = FontStyle.Italic
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        BreedInfoCard(
-                            modifier = Modifier.weight(HALF_WEIGHT),
-                            title = stringResource(R.string.group),
-                            info = petInfoUIModel.group,
-                            bg = MaterialTheme.colorScheme.primaryContainer,
-                            fg = MaterialTheme.colorScheme.onPrimaryContainer
+                    error != null -> {
+                        Text(
+                            text = error,
+                            style = MaterialTheme.typography.headlineSmall
                         )
+                    }
+
+                    petInfoUIModel != null -> {
+                        Text(
+                            text = stringResource(R.string.breed_information).uppercase(),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Text(
+                            text = petInfoUIModel.breedName,
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            letterSpacing = 1.sp
+                        )
+                        Text(
+                            text = "\"${petInfoUIModel.slogan}\"",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            fontStyle = FontStyle.Italic
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            BreedInfoCard(
+                                modifier = Modifier.weight(HALF_WEIGHT),
+                                title = stringResource(R.string.group),
+                                info = petInfoUIModel.group,
+                                bg = MaterialTheme.colorScheme.primaryContainer,
+                                fg = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            BreedInfoCard(
+                                modifier = Modifier.weight(HALF_WEIGHT),
+                                title = stringResource(R.string.lifespan),
+                                info = petInfoUIModel.lifespan,
+                                bg = MaterialTheme.colorScheme.secondaryContainer,
+                                fg = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            BreedInfoCard(
+                                modifier = Modifier.weight(HALF_WEIGHT),
+                                title = stringResource(R.string.diet),
+                                info = petInfoUIModel.diet,
+                                bg = MaterialTheme.colorScheme.tertiaryContainer,
+                                fg = MaterialTheme.colorScheme.onTertiaryContainer
+
+                            )
+                            BreedInfoCard(
+                                modifier = Modifier.weight(HALF_WEIGHT),
+                                title = stringResource(R.string.skin_type),
+                                info = petInfoUIModel.skinType,
+                                bg = MaterialTheme.colorScheme.primaryContainer,
+                                fg = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
                         BreedInfoCard(
-                            modifier = Modifier.weight(HALF_WEIGHT),
-                            title = stringResource(R.string.lifespan),
-                            info = petInfoUIModel.lifespan,
+                            modifier = Modifier.fillMaxWidth(),
+                            title = stringResource(R.string.weight),
+                            info = petInfoUIModel.weight,
+                            bg = MaterialTheme.colorScheme.tertiaryContainer,
+                            fg = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+
+                        val locationsText = petInfoUIModel.locations
+                            .filter { it.isNotBlank() }
+                            .joinToString(separator = ", ")
+
+                        BreedInfoCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            title = stringResource(R.string.locations),
+                            info = locationsText.ifBlank { stringResource(R.string.unknown) },
                             bg = MaterialTheme.colorScheme.secondaryContainer,
                             fg = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        BreedInfoCard(
-                            modifier = Modifier.weight(HALF_WEIGHT),
-                            title = stringResource(R.string.diet),
-                            info = petInfoUIModel.diet,
-                            bg = MaterialTheme.colorScheme.tertiaryContainer,
-                            fg = MaterialTheme.colorScheme.onTertiaryContainer
-
-                        )
-                        BreedInfoCard(
-                            modifier = Modifier.weight(HALF_WEIGHT),
-                            title = stringResource(R.string.skin_type),
-                            info = petInfoUIModel.skinType,
-                            bg = MaterialTheme.colorScheme.primaryContainer,
-                            fg = MaterialTheme.colorScheme.onPrimaryContainer
+                    else -> {
+                        Text(
+                            text = stringResource(R.string.unknown),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
-                    BreedInfoCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        title = stringResource(R.string.weight),
-                        info = petInfoUIModel.weight,
-                        bg = MaterialTheme.colorScheme.tertiaryContainer,
-                        fg = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-
-                    val locationsText = petInfoUIModel.locations
-                        .filter { it.isNotBlank() }
-                        .joinToString(separator = ", ")
-
-                    BreedInfoCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        title = stringResource(R.string.locations),
-                        info = locationsText.ifBlank { stringResource(R.string.unknown) },
-                        bg = MaterialTheme.colorScheme.secondaryContainer,
-                        fg = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
                 }
-
-                else -> {
-                    Text(
-                        text = stringResource(R.string.unknown),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                }
+            } else {
+                Text(
+                    text = stringResource(R.string.no_internet_connection),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))

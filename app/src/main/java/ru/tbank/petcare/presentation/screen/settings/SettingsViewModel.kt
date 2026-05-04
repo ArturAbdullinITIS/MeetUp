@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.model.Language
 import ru.tbank.petcare.domain.model.Settings
+import ru.tbank.petcare.domain.usecase.pets.IsOnlineUseCase
 import ru.tbank.petcare.domain.usecase.settings.GetAllSettingsUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateLanguageUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateNotificationsUseCase
@@ -27,12 +28,15 @@ class SettingsViewModel @Inject constructor(
     private val updateLanguageUseCase: UpdateLanguageUseCase,
     private val updateThemeUseCase: UpdateThemeUseCase,
     private val deleteCurrentUserUseCase: DeleteCurrentUserUseCase,
-    private val updateNotificationsUseCase: UpdateNotificationsUseCase
+    private val updateNotificationsUseCase: UpdateNotificationsUseCase,
+    private val isOnlineUseCase: IsOnlineUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
     private val _events = MutableSharedFlow<SettingsEvent>()
     val events = _events.asSharedFlow()
+
+    val isOnline = isOnlineUseCase()
     init {
         viewModelScope.launch {
             getAllSettingsUseCase().collect { settings ->
