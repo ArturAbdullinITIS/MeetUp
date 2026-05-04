@@ -1,6 +1,7 @@
 package ru.tbank.petcare.presentation.mapper
 
 import android.R.attr.name
+import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import ru.tbank.petcare.R
@@ -196,9 +197,7 @@ fun CreateActivityState.toDomain(): Activity {
     )
 }
 fun Pet.toPublicPetCardUIModel(): PublicPetCardUIModel {
-    val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->
-        if (ch.isLowerCase()) ch.titlecase() else ch.toString()
-    }
+    val genderFormatted = gender.toTitleRes()
     val noteFormatted = note.ifBlank { "No Info" }
     return PublicPetCardUIModel(
         id = id,
@@ -363,4 +362,11 @@ private fun Date.isBirthdayToday(): Boolean {
 
     return today.get(Calendar.DAY_OF_MONTH) == birthday.get(Calendar.DAY_OF_MONTH) &&
         today.get(Calendar.MONTH) == birthday.get(Calendar.MONTH)
+}
+
+@StringRes
+fun Gender.toTitleRes(): Int = when (this) {
+    Gender.MALE -> R.string.male
+    Gender.FEMALE -> R.string.female
+    Gender.UNKNOWN -> R.string.unknown
 }

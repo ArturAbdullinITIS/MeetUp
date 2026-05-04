@@ -27,13 +27,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.model.PublicPetCardUIModel
-import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
 @Composable
 fun PublicPetProfilePicture(
@@ -111,7 +109,7 @@ fun PublicPetCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = pet.gender,
+                        text = stringResource(pet.gender),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
@@ -177,25 +175,5 @@ fun GameScoreCard(
                 fontWeight = FontWeight.Bold
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun PublicPetPreview() {
-    PetCareTheme {
-        PublicPetCard(
-            pet = PublicPetCardUIModel(
-                id = "123",
-                name = "Cooper",
-                photoUrl = "",
-                note = "Professional ball chaser and nap specialist.\n" +
-                    "Looking for friends in the park!",
-                gameScore = 1240,
-                gender = "Male",
-                breed = "Golden Retriever"
-            ),
-            onClick = { }
-        )
     }
 }

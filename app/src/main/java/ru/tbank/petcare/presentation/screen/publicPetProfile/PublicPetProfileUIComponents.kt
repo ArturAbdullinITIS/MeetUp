@@ -36,9 +36,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.checkerframework.checker.units.qual.kg
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.ParameterCard
 import ru.tbank.petcare.presentation.common.PetProfilePicture
+import ru.tbank.petcare.presentation.mapper.toTitleRes
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
@@ -116,16 +118,13 @@ fun PublicPetProfileCard(
                     Spacer(modifier = Modifier.width(16.dp))
                     ParameterCard(
                         parameterName = stringResource(R.string.gender_parameter),
-                        parameterValue = pet.gender.name.lowercase()
-                            .replaceFirstChar { ch ->
-                                if (ch.isLowerCase()) ch.titlecase() else ch.toString()
-                            }
+                        parameterValue = stringResource(pet.gender.toTitleRes())
                     )
                 }
 
                 ParameterCard(
                     parameterName = stringResource(R.string.weight),
-                    parameterValue = "${pet.weight} kg"
+                    parameterValue = pet.weight + stringResource(R.string.kg)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

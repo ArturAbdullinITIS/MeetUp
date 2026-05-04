@@ -253,4 +253,7 @@
     <string name="month">Месяц</string>
     <string name="_3m">3М</string>
     <string name="placeholder_icon">Иконка плейсхолдера</string>
+    <string name="female">Жен</string>
+    <string name="male">Муж</string>
+    <string name="kg">кг</string>
 </resources>

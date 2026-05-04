@@ -254,4 +254,7 @@
     <string name="you_dont_have_any_pets">You don\'t have any pets</string>
     <string name="create_a_pet">Create a pet before you play</string>
     <string name="placeholder_icon">Placeholder Icon</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="kg">kg</string>
 </resources>

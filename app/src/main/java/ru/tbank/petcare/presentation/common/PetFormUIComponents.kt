@@ -56,11 +56,11 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.presentation.mapper.toIndex
+import ru.tbank.petcare.presentation.mapper.toTitleRes
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
 import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
-import java.util.Locale
 
 @Composable
 fun PublicProfileCardSwitch(
@@ -311,13 +311,10 @@ fun GenderSegmentedControlButton(
                                     modifier = Modifier.size(16.dp)
                                 )
                             }
-                            val title = gender.name.lowercase(Locale.getDefault())
-                                .replaceFirstChar { ch ->
-                                    if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
-                                }
+                            val title = gender.toTitleRes()
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = title,
+                                text = stringResource(title),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold
                             )

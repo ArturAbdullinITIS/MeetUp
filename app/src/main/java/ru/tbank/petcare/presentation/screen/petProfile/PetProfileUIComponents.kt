@@ -46,6 +46,7 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.common.ParameterCard
 import ru.tbank.petcare.presentation.common.PetProfilePicture
+import ru.tbank.petcare.presentation.mapper.toTitleRes
 import ru.tbank.petcare.presentation.model.PetForm
 
 @Composable
@@ -129,10 +130,7 @@ fun PetProfileCard(
                     Spacer(modifier = Modifier.width(16.dp))
                     ParameterCard(
                         parameterName = stringResource(R.string.gender_parameter),
-                        parameterValue = pet.gender.name.lowercase()
-                            .replaceFirstChar { ch ->
-                                if (ch.isLowerCase()) ch.titlecase() else ch.toString()
-                            }
+                        parameterValue = stringResource(pet.gender.toTitleRes())
                     )
                 }
 
