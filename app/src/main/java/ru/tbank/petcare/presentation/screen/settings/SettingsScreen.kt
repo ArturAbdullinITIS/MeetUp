@@ -73,6 +73,8 @@ private fun SettingContent(
         }
     )
 
+    val isOnline by viewModel.isOnline.collectAsState()
+
     fun handleNotificationCommand(command: SettingsCommand) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val hasPermission = ContextCompat.checkSelfPermission(
@@ -229,7 +231,8 @@ private fun SettingContent(
             DeleteAccountButton(
                 onClick = {
                     showDeleteDialog = true
-                }
+                },
+                enabled = isOnline
             )
         }
     }

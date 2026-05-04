@@ -244,6 +244,13 @@
     <string name="care">Уход</string>
     <string name="play"><![CDATA[Играй и]]></string>
     <string name="connect">Общайся</string>
+    <string name="year">Год</string>
     <string name="you_dont_have_any_pets">У тебя пока нет питомцев</string>
     <string name="create_a_pet">Создай питомца прежде чем играть</string>
+    <string name="birthday_icon">Иконка дня рождения</string>
+    <string name="all">Все</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="_3m">3М</string>
+    <string name="placeholder_icon">Иконка плейсхолдера</string>
 </resources>

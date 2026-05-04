@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetLocalPetUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
+import ru.tbank.petcare.domain.usecase.pets.IsOnlineUseCase
 import ru.tbank.petcare.domain.usecase.settings.GetAllSettingsUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
@@ -25,11 +26,14 @@ class PetProfileViewModel @AssistedInject constructor(
     private val getPetInfoUseCase: GetPetInfoUseCase,
     private val getAllSettingsUseCase: GetAllSettingsUseCase,
     private val errorParser: ErrorParser,
+    private val isOnlineUseCase: IsOnlineUseCase,
     @Assisted(PET_ID) private val petId: String,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PetProfileState())
     val state = _state.asStateFlow()
+
+    val isOnline = isOnlineUseCase()
 
     init {
         loadPet()
