@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.ui.geometry.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,14 +19,21 @@ import javax.inject.Inject
 @HiltViewModel
 class MiniGameViewModel @Inject constructor(
     private val getAllPetsUseCase: GetAllPetsUseCase,
-    private val updatePetHighScoreUseCase: UpdatePetHighScoreUseCase
+    private val updatePetHighScoreUseCase: UpdatePetHighScoreUseCase,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
     val state = _state.asStateFlow()
 
+    private var petsJob: Job? = null
+
     init {
-        loadPets()
+        viewModelScope.launch {
+            firebaseAuth.addAuthStateListener {
+                loadPets()
+            }
+        }
     }
 
     fun processCommand(command: MiniGameCommand) {
@@ -39,7 +48,9 @@ class MiniGameViewModel @Inject constructor(
     }
 
     private fun loadPets() {
-        viewModelScope.launch {
+        petsJob?.cancel()
+
+        petsJob = viewModelScope.launch {
             getAllPetsUseCase().collect { pets ->
                 val uiPets = pets.map { it.toPetCardUIModel() }
                 _state.update { currentState ->

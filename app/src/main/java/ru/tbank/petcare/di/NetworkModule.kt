@@ -15,6 +15,7 @@ import ru.tbank.petcare.data.remote.network.animals.AnimalsApiService
 import ru.tbank.petcare.data.remote.network.cloudinary.CloudinaryApiService
 import ru.tbank.petcare.data.remote.network.cloudinary.ImageBytesProvider
 import ru.tbank.petcare.data.remote.network.cloudinary.ImageBytesProviderImpl
+import ru.tbank.petcare.data.remote.network.deepl.DeeplApiService
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -136,8 +137,8 @@ interface NetworkModule {
             @Named(
                 DEEPL_QUAL
             ) retrofit: Retrofit
-        ): ru.tbank.petcare.data.remote.network.deepl.DeeplApiService {
-            return retrofit.create(ru.tbank.petcare.data.remote.network.deepl.DeeplApiService::class.java)
+        ): DeeplApiService {
+            return retrofit.create(DeeplApiService::class.java)
         }
     }
 }

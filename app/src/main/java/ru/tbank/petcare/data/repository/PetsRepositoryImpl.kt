@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -359,27 +360,25 @@ class PetsRepositoryImpl @Inject constructor(
                     dto?.toDomain()
                 }
 
-                trySend(tips)
+                if (currentLanguage == Language.RUSSIAN && tips.isNotEmpty()) {
+                    launch {
+                        val translatedTips = tips.map { tip ->
+                            try {
+                                tip.copy(text = translateText(tip.text, currentLanguage))
+                            } catch (_: Exception) {
+                                tip
+                            }
+                        }
+                        trySend(translatedTips)
+                    }
+                } else {
+                    trySend(tips)
+                }
             }
         awaitClose {
             listener.remove()
         }
-    }
-        .map { tips ->
-            if (currentLanguage == Language.RUSSIAN) {
-                coroutineScope {
-                    tips.map { tip ->
-                        async {
-                            tip.copy(
-                                text = translateText(tip.text, currentLanguage)
-                            )
-                        }
-                    }.awaitAll()
-                }
-            } else {
-                tips
-            }
-        }.flowOn(dispatcherIO)
+    }.flowOn(dispatcherIO)
 
     override suspend fun getPetInfo(breed: String, currentLanguage: Language): ValidationResult<PetInfo> {
         return withContext(dispatcherIO) {
