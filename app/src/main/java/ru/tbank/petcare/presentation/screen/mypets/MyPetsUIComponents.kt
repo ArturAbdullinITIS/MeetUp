@@ -57,7 +57,7 @@ import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
 fun MyPetsPetCard(
     pet: PetCardUIModel,
     onPetClick: () -> Unit,
-    clickable: Boolean,
+    clickable: Boolean = true,
     model: LastActivityUIModel?
 ) {
     Box {

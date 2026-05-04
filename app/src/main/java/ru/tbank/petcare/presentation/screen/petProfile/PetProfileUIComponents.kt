@@ -165,7 +165,8 @@ fun PetProfileButton(
     icon: ImageVector,
     bg: Color,
     fg: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean = true
 ) {
     Button(
         shape = RoundedCornerShape(48.dp),
@@ -174,7 +175,8 @@ fun PetProfileButton(
             contentColor = fg
         ),
         onClick = onClick,
-        modifier = modifier.height(52.dp)
+        modifier = modifier.height(52.dp),
+        enabled = enabled
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp),

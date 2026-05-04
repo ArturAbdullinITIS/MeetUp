@@ -64,13 +64,15 @@ private fun PetProfileContent(
     val petInfo = state.petInfoUIModel
     val scrollState = rememberScrollState()
     var showBreedSheet by remember { mutableStateOf(false) }
+    val isOnline by viewModel.isOnline.collectAsState()
 
     if (showBreedSheet) {
         BreedInfoBottomSheet(
             petInfoUIModel = petInfo,
             error = state.errorMessage,
             onDismiss = { showBreedSheet = false },
-            isLoading = state.isInfoLoading
+            isLoading = state.isInfoLoading,
+            isOnline = isOnline
         )
     }
 
@@ -101,7 +103,7 @@ private fun PetProfileContent(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onCreateActivityClick(petId) },
             text = stringResource(R.string.create_activity_button),
-            enabled = true
+            enabled = isOnline
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -118,7 +120,8 @@ private fun PetProfileContent(
                 fg = MaterialTheme.colorScheme.onSurface,
                 onClick = {
                     onNavigateToEdit(petId)
-                }
+                },
+                enabled = isOnline
             )
             PetProfileButton(
                 modifier = Modifier.weight(1f),
@@ -128,7 +131,8 @@ private fun PetProfileContent(
                 fg = MaterialTheme.colorScheme.onSecondaryContainer,
                 onClick = {
                     onNavigateToAnalytics(petId)
-                }
+                },
+                enabled = isOnline
             )
         }
     }

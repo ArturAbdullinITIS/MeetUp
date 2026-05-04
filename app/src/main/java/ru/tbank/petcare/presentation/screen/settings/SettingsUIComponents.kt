@@ -360,14 +360,17 @@ fun LanguageSegmentedControl(
 
 @Composable
 fun DeleteAccountButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean = true
 ) {
     Button(
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            disabledContainerColor = Color.Transparent
         ),
-        onClick = onClick
+        onClick = onClick,
+        enabled = enabled
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

@@ -138,7 +138,6 @@ private fun MyPetsContent(
                         MyPetsPetCard(
                             pet = pet,
                             onPetClick = { onNavigateToProfile(pet.id) },
-                            clickable = isOnline,
                             model = mapToLastActivityUIModel(
                                 activityType = pet.lastActivityType,
                                 activityDate = pet.lastActivityDate,
