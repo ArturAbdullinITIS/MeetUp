@@ -13,10 +13,15 @@ class TranslationRepositoryImpl @Inject constructor(
     private val deeplApiService: DeeplApiService,
 ) : TranslationRepository {
 
+    companion object {
+        private const val RU_LANGUAGE = "RU"
+        private const val EN_LANGUAGE = "EN"
+    }
+
     private fun getDeeplLanguage(language: Language): String {
         return when (language) {
-            Language.ENGLISH -> "EN"
-            Language.RUSSIAN -> "RU"
+            Language.ENGLISH -> EN_LANGUAGE
+            Language.RUSSIAN -> RU_LANGUAGE
         }
     }
 
