@@ -398,30 +398,7 @@ class PetsRepositoryImpl @Inject constructor(
                     return@withContext ValidationResult(data = animal, isSuccess = true)
                 }
 
-                val translatedBreedName = translateText(animal.breedName, currentLanguage)
-                val translatedDiet = translateText(animal.diet, currentLanguage)
-                val translatedGroup = translateText(animal.group, currentLanguage)
-                val translatedLifespan = translateText(animal.lifespan, currentLanguage)
-                val translatedSkinType = translateText(animal.skinType, currentLanguage)
-                val translatedSlogan = translateText(animal.slogan, currentLanguage)
-                val translatedWeight = translateText(animal.weight, currentLanguage)
-
-                val translatedLocations = if (animal.locations.isNotEmpty()) {
-                    translateTextList(animal.locations, currentLanguage)
-                } else {
-                    emptyList()
-                }
-
-                val translatedPetInfo = PetInfo(
-                    breedName = translatedBreedName,
-                    diet = translatedDiet,
-                    group = translatedGroup,
-                    lifespan = translatedLifespan,
-                    skinType = translatedSkinType,
-                    slogan = translatedSlogan,
-                    weight = translatedWeight,
-                    locations = translatedLocations
-                )
+                val translatedPetInfo = translatePetInfo(animal, currentLanguage)
 
                 ValidationResult(data = translatedPetInfo, isSuccess = true)
             } catch (e: Exception) {
@@ -432,6 +409,32 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
+    private suspend fun translatePetInfo(animal: PetInfo, currentLanguage: Language): PetInfo {
+        val translatedBreedName = translateText(animal.breedName, currentLanguage)
+        val translatedDiet = translateText(animal.diet, currentLanguage)
+        val translatedGroup = translateText(animal.group, currentLanguage)
+        val translatedLifespan = translateText(animal.lifespan, currentLanguage)
+        val translatedSkinType = translateText(animal.skinType, currentLanguage)
+        val translatedSlogan = translateText(animal.slogan, currentLanguage)
+        val translatedWeight = translateText(animal.weight, currentLanguage)
+
+        val translatedLocations = if (animal.locations.isNotEmpty()) {
+            translateTextList(animal.locations, currentLanguage)
+        } else {
+            emptyList()
+        }
+
+        return PetInfo(
+            breedName = translatedBreedName,
+            diet = translatedDiet,
+            group = translatedGroup,
+            lifespan = translatedLifespan,
+            skinType = translatedSkinType,
+            slogan = translatedSlogan,
+            weight = translatedWeight,
+            locations = translatedLocations
+        )
+    }
     private suspend fun translateText(text: String, targetLanguage: Language): String {
         if (text.isBlank()) return text
 
